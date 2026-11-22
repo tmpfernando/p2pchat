@@ -1,4 +1,4 @@
-# 🌈 P2P Link
+# 🗣️ P2P Link
 
 Uma aplicação web direta via navegador (**Peer-to-Peer / WebRTC**) para chamadas de voz, compartilhamento de tela, câmera, chat e envio de arquivos — feita para funcionar sem depender de plataformas pesadas ou bloqueadas.
 
