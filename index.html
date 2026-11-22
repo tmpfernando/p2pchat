@@ -747,6 +747,81 @@
       from { opacity: 1; transform: translate(-50%, -50%) scale(0.2); }
       to { opacity: 0; transform: translate(-50%, -50%) scale(16); border-color: #00e5ff; }
     }
+
+    /* ===== RGB: festa / balada ===== */
+    .rgb-lasers { position: fixed; inset: 0; z-index: 80; pointer-events: none; overflow: hidden; display: none; mix-blend-mode: screen; }
+    [data-theme="colorful"] .rgb-lasers { display: block; }
+    .laser {
+      position: absolute; display: block; height: 4px; width: 150vmax; border-radius: 4px; transform-origin: 0 50%; opacity: 0.8;
+      background: linear-gradient(90deg, var(--lc), transparent 85%);
+      box-shadow: 0 0 12px var(--lc), 0 0 30px var(--lc);
+      animation: laserSweep var(--ld, 5s) ease-in-out var(--ldel, 0s) infinite alternate;
+    }
+    .laser:nth-child(3), .laser:nth-child(4), .laser:nth-child(7), .laser:nth-child(8) { transform-origin: 100% 50%; background: linear-gradient(270deg, var(--lc), transparent 85%); }
+    .laser:nth-child(1) { left: 0; top: 0; --lc: #ff2e93; --a0: 2deg; --a1: 88deg; --ld: 4.2s; }
+    .laser:nth-child(2) { left: 0; top: 0; --lc: #00e5ff; --a0: 80deg; --a1: 10deg; --ld: 5.6s; --ldel: -2s; }
+    .laser:nth-child(3) { right: 0; top: 0; --lc: #ffe600; --a0: -2deg; --a1: -88deg; --ld: 4.8s; }
+    .laser:nth-child(4) { right: 0; top: 0; --lc: #00f5a0; --a0: -80deg; --a1: -10deg; --ld: 6s; --ldel: -3s; }
+    .laser:nth-child(5) { left: 0; bottom: 0; --lc: #b537f2; --a0: -2deg; --a1: -88deg; --ld: 5s; }
+    .laser:nth-child(6) { left: 0; bottom: 0; --lc: #ff9e00; --a0: -80deg; --a1: -10deg; --ld: 4.4s; --ldel: -1s; }
+    .laser:nth-child(7) { right: 0; bottom: 0; --lc: #ff2e93; --a0: 2deg; --a1: 88deg; --ld: 5.2s; }
+    .laser:nth-child(8) { right: 0; bottom: 0; --lc: #00e5ff; --a0: 80deg; --a1: 10deg; --ld: 4.6s; --ldel: -2.5s; }
+    @keyframes laserSweep { from { transform: rotate(var(--a0)); } to { transform: rotate(var(--a1)); } }
+    .scan {
+      position: absolute; left: 0; top: 0; width: 100%; height: 3px; display: block;
+      background: linear-gradient(90deg, transparent, #00f5a0, #00e5ff, #ff2e93, transparent);
+      box-shadow: 0 0 16px #00e5ff; animation: scanY 3.6s linear infinite alternate;
+    }
+    .scan:nth-of-type(2) { animation-duration: 5s; animation-delay: -2s; filter: hue-rotate(120deg); }
+    .scan:nth-of-type(3) { animation-duration: 7s; animation-delay: -4s; filter: hue-rotate(240deg); }
+    @keyframes scanY { from { transform: translateY(0); } to { transform: translateY(100vh); } }
+    .rgb-beat { position: absolute; inset: 0; animation: beatColor 5s linear infinite, beatPulse 1s ease-in-out infinite; }
+    @keyframes beatColor {
+      0% { background: rgba(255, 46, 147, 0.1); } 25% { background: rgba(0, 229, 255, 0.1); }
+      50% { background: rgba(0, 245, 160, 0.1); } 75% { background: rgba(255, 230, 0, 0.1); } 100% { background: rgba(255, 46, 147, 0.1); }
+    }
+    @keyframes beatPulse { 0%, 100% { opacity: 0.25; } 50% { opacity: 1; } }
+    .rgb-disco {
+      position: absolute; top: -1.4rem; left: 50%; margin-left: -3rem; font-size: 6rem; line-height: 1;
+      transform-origin: 50% -2rem; filter: drop-shadow(0 0 26px #fff); animation: discoSwing 2.6s ease-in-out infinite alternate;
+    }
+    @keyframes discoSwing { from { transform: rotate(-14deg); } to { transform: rotate(14deg); } }
+    @media (max-width: 700px) { .rgb-disco { display: none; } }
+    .laser-streak {
+      position: fixed; width: 40vmax; height: 3px; border-radius: 3px; transform-origin: 0 50%; pointer-events: none;
+      background: linear-gradient(90deg, transparent, var(--lc)); box-shadow: 0 0 14px var(--lc), 0 0 30px var(--lc);
+      animation: laserShoot 0.9s linear forwards;
+    }
+    @keyframes laserShoot {
+      from { transform: rotate(var(--ang)) translateX(-45vmax); }
+      to { transform: rotate(var(--ang)) translateX(190vmax); }
+    }
+    .rgb-confetti { position: fixed; width: 9px; height: 15px; pointer-events: none; animation: confettiOut 1.6s ease-out forwards; }
+    @keyframes confettiOut {
+      0% { opacity: 1; transform: translate(-50%, -50%) rotate(0deg); }
+      70% { opacity: 1; }
+      100% { opacity: 0; transform: translate(calc(-50% + var(--bx)), calc(-50% + var(--by) + 260px)) rotate(var(--br)); }
+    }
+    .rgb-combo {
+      position: fixed; pointer-events: none; font-size: 2.4rem; font-weight: 800; white-space: nowrap; transform: translate(-50%, -50%);
+      background: linear-gradient(90deg, #ff2e93, #ffe600, #00f5a0, #00e5ff); -webkit-background-clip: text; background-clip: text; color: transparent;
+      filter: drop-shadow(0 0 10px #fff); animation: comboUp 1.1s ease-out forwards;
+    }
+    @keyframes comboUp {
+      0% { opacity: 0; transform: translate(-50%, -50%) scale(0.4); }
+      20% { opacity: 1; transform: translate(-50%, -80%) scale(1.3); }
+      100% { opacity: 0; transform: translate(-50%, -260%) scale(1); }
+    }
+    .rgb-float-emoji { transition: translate 0.35s cubic-bezier(0.2, 0.9, 0.3, 1.4), scale 0.25s ease-out; }
+    .emo-dance { --anim: emoDance var(--dur) ease-in-out var(--delay) infinite; }
+    @keyframes emoDance {
+      0%, 100% { transform: rotate(-18deg) scale(1) translateY(0); }
+      25% { transform: rotate(12deg) scale(1.25) translateY(-30px); }
+      50% { transform: rotate(20deg) scale(0.9) translateY(0); }
+      75% { transform: rotate(-10deg) scale(1.3) translateY(-20px); }
+    }
+    .rgb-peek { animation-duration: 1.8s; }
+    @media (prefers-reduced-motion: reduce) { .rgb-lasers { display: none !important; } }
   </style>
 </head>
 <body data-theme="dark">
@@ -754,6 +829,7 @@
   <div class="aurora" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
   <div class="rgb-emoji-layer" id="rgbEmojiLayer" aria-hidden="true"></div>
   <div class="rgb-fx-layer" id="rgbFxLayer" aria-hidden="true"></div>
+  <div class="rgb-lasers" aria-hidden="true"><i class="laser"></i><i class="laser"></i><i class="laser"></i><i class="laser"></i><i class="laser"></i><i class="laser"></i><i class="laser"></i><i class="laser"></i><i class="scan"></i><i class="scan"></i><i class="scan"></i><div class="rgb-beat"></div><div class="rgb-disco">🪩</div></div>
 
   <header class="topbar">
     <div class="brand-group">
@@ -864,18 +940,6 @@
         <div class="members" id="membersGrid"></div>
       </div>
 
-      <div class="card">
-        <div class="card-head">
-          <span class="card-title" id="contactsTitleText">📇</span>
-          <span class="muted" id="onlineContactsCount">0</span>
-        </div>
-        <div class="row">
-          <input type="text" class="grow" id="contactNameInput" />
-          <input type="text" class="grow" id="contactIdInput" />
-          <button class="btn-soft btn-sm" id="addContactBtn">➕</button>
-        </div>
-        <div class="list" id="contactsList"></div>
-      </div>
 
     </section>
 
@@ -1059,10 +1123,6 @@
         selfMic: '🎤 Voz ativa',
         muteUser: '🔇 Mudo',
         unmuteUser: '🔊 Som',
-        contactsTitle: '📇 Contatos',
-        contactNamePh: 'Nome do contato',
-        contactCodePh: 'Código do contato',
-        addContactBtn: '➕ Salvar',
         connectBtn: '🚪 Conectar',
         removeBtn: '✕ Remover',
         chatTitle: '💬 Bate-papo',
@@ -1149,10 +1209,6 @@
         selfMic: '🎤 Voice active',
         muteUser: '🔇 Mute',
         unmuteUser: '🔊 Unmute',
-        contactsTitle: '📇 Contacts',
-        contactNamePh: 'Contact name',
-        contactCodePh: 'Contact code',
-        addContactBtn: '➕ Save',
         connectBtn: '🚪 Connect',
         removeBtn: '✕ Remove',
         chatTitle: '💬 Chat',
@@ -1239,10 +1295,6 @@
         selfMic: '🎤 Voz activa',
         muteUser: '🔇 Silenciar',
         unmuteUser: '🔊 Sonido',
-        contactsTitle: '📇 Contactos',
-        contactNamePh: 'Nombre del contacto',
-        contactCodePh: 'Código del contacto',
-        addContactBtn: '➕ Guardar',
         connectBtn: '🚪 Conectar',
         removeBtn: '✕ Quitar',
         chatTitle: '💬 Chat',
@@ -1289,7 +1341,6 @@
 
     const STORE = {
       prefs: 'p2pchat_prefs_v4',
-      contacts: 'p2pchat_contacts_v1',
       history: 'p2pchat_history_v1'
     };
 
@@ -1314,7 +1365,7 @@
     };
 
     let prefs = { ...defaults, ...JSON.parse(localStorage.getItem(STORE.prefs) || '{}') };
-    let savedContacts = JSON.parse(localStorage.getItem(STORE.contacts) || '[]');
+    try { localStorage.removeItem('p2pchat_contacts_v1'); } catch (_) {}
     let historyMap = JSON.parse(localStorage.getItem(STORE.history) || '{}');
 
     let inRoom = false;
@@ -1367,10 +1418,6 @@
 
       $('stageEmptyText').textContent = t('stageEmpty');
       $('membersTitleText').textContent = t('membersTitle');
-      $('contactsTitleText').textContent = t('contactsTitle');
-      $('contactNameInput').placeholder = t('contactNamePh');
-      $('contactIdInput').placeholder = t('contactCodePh');
-      $('addContactBtn').textContent = t('addContactBtn');
 
       $('chatTitleText').textContent = t('chatTitle');
       $('clearHistoryBtn').textContent = t('clearChatBtn');
@@ -1411,7 +1458,8 @@
     }
 
     const RGB_EMOJIS = ['🌈', '🦄', '⭐', '✨', '💖', '🦋', '🌸', '🍭', '💎', '🌟', '🎉', '🔮', '🫧', '🌺', '🍓', '🍉', '🪩', '🎈', '🌀', '🔥', '💜', '💙', '💚', '💛', '🧿', '🎨', '🪐', '🌻', '🍒', '🍬', '🦚', '🐠', '🎧', '🫶'];
-    const EMO_MODES = ['float', 'float', 'float', 'drift', 'drift', 'rise', 'rise', 'bounce', 'spin', 'pulse'];
+    const EMO_MODES = ['float', 'float', 'drift', 'drift', 'rise', 'rise', 'bounce', 'bounce', 'spin', 'pulse', 'dance', 'dance'];
+    const EMO_DUR = { float: [4, 9], drift: [8, 18], rise: [7, 14], bounce: [1.2, 2.4], spin: [3, 7], pulse: [1, 2.2], dance: [0.9, 1.6] };
     const rnd = (a, b) => a + Math.random() * (b - a);
     const pickEmoji = () => RGB_EMOJIS[Math.floor(Math.random() * RGB_EMOJIS.length)];
     const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -1420,7 +1468,7 @@
       const layer = $('rgbEmojiLayer');
       layer.innerHTML = '';
       const k = window.innerWidth < 700 ? 0.6 : 1;
-      const count = k < 1 ? 26 : 44;
+      const count = k < 1 ? 34 : 62;
       for (let i = 0; i < count; i++) {
         const mode = EMO_MODES[Math.floor(Math.random() * EMO_MODES.length)];
         const el = document.createElement('span');
@@ -1429,11 +1477,11 @@
         el.style.fontSize = (rnd(2.4, 6.2) * k).toFixed(2) + 'rem';
         el.style.left = (mode === 'drift' ? 0 : rnd(-2, 94)).toFixed(1) + '%';
         el.style.top = (mode === 'rise' ? 0 : rnd(-2, 90)).toFixed(1) + '%';
-        const slow = mode === 'drift' ? [18, 36] : mode === 'rise' ? [14, 28] : [6, 16];
+        const slow = EMO_DUR[mode];
         el.style.setProperty('--dur', rnd(slow[0], slow[1]).toFixed(1) + 's');
         el.style.setProperty('--delay', (-rnd(0, 24)).toFixed(1) + 's');
         el.style.setProperty('--amp', rnd(-18, 18).toFixed(0) + 'vh');
-        ['dx1', 'dy1', 'dx2', 'dy2'].forEach((v) => el.style.setProperty('--' + v, rnd(-130, 130).toFixed(0) + 'px'));
+        ['dx1', 'dy1', 'dx2', 'dy2'].forEach((v) => el.style.setProperty('--' + v, rnd(-220, 220).toFixed(0) + 'px'));
         if (mode === 'rise') el.style.setProperty('--amp', rnd(-12, 12).toFixed(0) + 'vw');
         layer.appendChild(el);
       }
@@ -1453,10 +1501,11 @@
     }
 
     const BURST_EMOJIS = ['🌈', '🦄', '🌈', '🦄', '⭐', '✨', '💖', '🦋', '🎉', '🍭', '🌟', '💎'];
+    const PARTY_COLORS = ['#ff2e93', '#ffe600', '#00f5a0', '#00e5ff', '#b537f2', '#ff9e00'];
     function rgbBurst(x, y, n, dist, big) {
       const fx = $('rgbFxLayer');
-      if (!fx || fx.childElementCount > 150) return;
-      if (big) {
+      if (!fx || fx.childElementCount > 220) return;
+      if (big && n > 10) {
         for (let r = 0; r < 2; r++) {
           const ring = document.createElement('span');
           ring.className = 'rgb-ring';
@@ -1485,17 +1534,103 @@
         fx.appendChild(el);
       }
     }
+    function rgbConfetti(x, y, n) {
+      const fx = $('rgbFxLayer');
+      if (!fx) return;
+      for (let i = 0; i < n; i++) {
+        const el = document.createElement('span');
+        el.className = 'rgb-confetti';
+        el.style.left = x + 'px';
+        el.style.top = y + 'px';
+        el.style.background = PARTY_COLORS[Math.floor(Math.random() * PARTY_COLORS.length)];
+        const ang = Math.random() * Math.PI * 2, d = rnd(80, 360);
+        el.style.setProperty('--bx', (Math.cos(ang) * d).toFixed(0) + 'px');
+        el.style.setProperty('--by', (Math.sin(ang) * d - 60).toFixed(0) + 'px');
+        el.style.setProperty('--br', rnd(-720, 720).toFixed(0) + 'deg');
+        el.style.animationDuration = rnd(1.1, 2).toFixed(2) + 's';
+        el.addEventListener('animationend', () => el.remove());
+        fx.appendChild(el);
+      }
+    }
+    function comboLabel(x, y, n) {
+      const fx = $('rgbFxLayer');
+      if (!fx) return;
+      const el = document.createElement('span');
+      el.className = 'rgb-combo';
+      el.textContent = 'COMBO x' + n + ' 🔥';
+      el.style.left = x + 'px';
+      el.style.top = y + 'px';
+      el.addEventListener('animationend', () => el.remove());
+      fx.appendChild(el);
+    }
+
+    let combo = 0, comboTimer = null, holdTimer = null;
+    const ptr = { x: 0, y: 0 };
+    function partyClick(x, y) {
+      combo++;
+      clearTimeout(comboTimer);
+      comboTimer = setTimeout(() => { combo = 0; }, 800);
+      rgbBurst(x, y, Math.min(34 + combo * 4, 80), Math.min(380 + combo * 20, 620), true);
+      rgbConfetti(x, y, 30);
+      if (combo >= 5 && combo % 5 === 0) comboLabel(x, y, combo);
+    }
+    function stopHold() { clearInterval(holdTimer); holdTimer = null; }
     document.addEventListener('pointerdown', (e) => {
-      if (prefs.theme === 'colorful' && !reduceMotion) rgbBurst(e.clientX, e.clientY, 28, 380, true);
+      if (prefs.theme !== 'colorful' || reduceMotion) return;
+      ptr.x = e.clientX; ptr.y = e.clientY;
+      partyClick(ptr.x, ptr.y);
+      stopHold();
+      holdTimer = setInterval(() => rgbBurst(ptr.x, ptr.y, 6, 220, true), 150);
     });
-    let lastTrail = 0;
+    document.addEventListener('pointerup', stopHold);
+    document.addEventListener('pointercancel', stopHold);
+
+    function emojiReact(x, y) {
+      const R = 170;
+      $('rgbEmojiLayer').childNodes.forEach((el) => {
+        const r = el.getBoundingClientRect();
+        const dx = r.left + r.width / 2 - x, dy = r.top + r.height / 2 - y;
+        const d = Math.hypot(dx, dy) || 1;
+        if (d < R) {
+          const f = (1 - d / R) * 130;
+          el.style.translate = (dx / d * f).toFixed(0) + 'px ' + (dy / d * f).toFixed(0) + 'px';
+          el.style.scale = (1 + (1 - d / R) * 0.9).toFixed(2);
+        } else if (el.style.translate) {
+          el.style.translate = '';
+          el.style.scale = '';
+        }
+      });
+    }
+    let lastTrail = 0, lastReact = 0;
     document.addEventListener('pointermove', (e) => {
-      if (prefs.theme !== 'colorful' || reduceMotion || e.pointerType === 'touch') return;
+      ptr.x = e.clientX; ptr.y = e.clientY;
+      if (prefs.theme !== 'colorful' || reduceMotion) return;
       const now = performance.now();
-      if (now - lastTrail < 110) return;
+      if (now - lastReact > 60) { lastReact = now; emojiReact(e.clientX, e.clientY); }
+      if (e.pointerType === 'touch' || now - lastTrail < 110) return;
       lastTrail = now;
       rgbBurst(e.clientX, e.clientY, 1, 60, false);
     });
+
+    let streakTimer = null;
+    function laserStreak() {
+      const fx = $('rgbFxLayer');
+      if (!fx || fx.childElementCount > 200) return;
+      const el = document.createElement('span');
+      const fromLeft = Math.random() < 0.5;
+      el.className = 'laser-streak';
+      el.style.setProperty('--lc', PARTY_COLORS[Math.floor(Math.random() * PARTY_COLORS.length)]);
+      el.style.top = rnd(0, 100).toFixed(0) + 'vh';
+      el.style.left = fromLeft ? '0' : '100vw';
+      el.style.setProperty('--ang', (fromLeft ? rnd(-35, 35) : 180 + rnd(-35, 35)).toFixed(0) + 'deg');
+      el.addEventListener('animationend', () => el.remove());
+      fx.appendChild(el);
+    }
+    function setStreaks(on) {
+      clearInterval(streakTimer);
+      streakTimer = null;
+      if (on && !reduceMotion) streakTimer = setInterval(laserStreak, 650);
+    }
 
     function setTheme(themeName) {
       prefs.theme = themeName;
@@ -1505,7 +1640,10 @@
       });
       if (themeName === 'colorful') {
         spawnRgbEmojis();
+        setStreaks(true);
       } else {
+        setStreaks(false);
+        stopHold();
         $('rgbEmojiLayer').innerHTML = '';
         $('rgbFxLayer').innerHTML = '';
       }
@@ -1517,11 +1655,6 @@
       applyFilters();
       syncUI();
       broadcastHello();
-    }
-
-    function persistContacts() {
-      localStorage.setItem(STORE.contacts, JSON.stringify(savedContacts));
-      renderContacts();
     }
 
     function persistHistory() {
@@ -1854,9 +1987,7 @@
 
       connsMap[pid] = conn;
       peersMap[pid] = profile;
-      addContactAuto(pid, profile.name);
       renderMembers();
-      renderContacts();
       syncUI();
       addSystemMsg(`➕ ${profile.name} ${t('sysJoined')}`);
 
@@ -1912,7 +2043,6 @@
             if (link && navigator.clipboard) navigator.clipboard.writeText(link).catch(() => {});
           }
           syncUI();
-          renderContacts();
           renderMembers();
           renderHistory();
         } else {
@@ -1991,7 +2121,6 @@
           peersMap[conn.peer] = msg.hostProfile || { name: '👑', color: '#10b981', photo: null };
 
           syncUI();
-          renderContacts();
           renderMembers();
           renderHistory();
           addSystemMsg(t('sysApproved'));
@@ -2027,9 +2156,7 @@
 
         if (msg.type === 'hello') {
           peersMap[conn.peer] = msg.profile;
-          addContactAuto(conn.peer, msg.profile.name);
           renderMembers();
-          renderContacts();
           syncUI();
           if (msg.sharingScreen && !remoteScreens[conn.peer]) conn.send({ type: 'request-screen' });
           if (msg.sharingCam && !remoteCams[conn.peer]) conn.send({ type: 'request-cam' });
@@ -2094,7 +2221,6 @@
         removeRemoteMedia(conn.peer, 'screen');
         removeRemoteMedia(conn.peer, 'cam');
         renderMembers();
-        renderContacts();
         syncUI();
         addSystemMsg(`➖ ${who} ${t('sysLeft')}`);
       });
@@ -2382,70 +2508,6 @@
       const link = getInviteUrl();
       if (link && navigator.clipboard) navigator.clipboard.writeText(link).catch(() => {});
     };
-
-    function addContactAuto(id, name) {
-      if (!id || id === peer?.id) return;
-      if (!savedContacts.some((c) => c.id === id)) {
-        savedContacts.unshift({ name: name || id.slice(0, 6), id });
-        persistContacts();
-      }
-    }
-
-    $('addContactBtn').onclick = () => {
-      const id = $('contactIdInput').value.trim();
-      if (!id) return;
-      const name = $('contactNameInput').value.trim() || id.slice(0, 6);
-      const idx = savedContacts.findIndex((c) => c.id === id);
-      if (idx >= 0) savedContacts[idx].name = name;
-      else savedContacts.unshift({ name, id });
-      $('contactNameInput').value = '';
-      $('contactIdInput').value = '';
-      persistContacts();
-    };
-
-    function renderContacts() {
-      const box = $('contactsList');
-      box.innerHTML = '';
-      const activeIds = new Set(Object.keys(peersMap));
-      let onCount = 0;
-
-      if (!savedContacts.length) {
-        box.innerHTML = '<div class="muted">—</div>';
-        $('onlineContactsCount').textContent = '0';
-        return;
-      }
-
-      savedContacts.forEach((c) => {
-        const on = activeIds.has(c.id);
-        if (on) onCount++;
-        const el = document.createElement('div');
-        el.className = `list-item ${on ? 'active' : ''}`;
-        el.innerHTML = `
-          <div class="item-main">
-            <div class="item-title">
-              <span>${esc(c.name)}</span>
-              ${on ? '<span class="chip-on">●</span>' : ''}
-            </div>
-            <div class="item-sub">${esc(c.id)}</div>
-          </div>
-          <div class="row">
-            ${(!on && !inRoom && !pendingApproval) ? `<button class="btn-soft btn-sm" onclick="callContact('${esc(c.id)}')">${t('connectBtn')}</button>` : ''}
-            <button class="btn-soft btn-sm" onclick="delContact('${esc(c.id)}')">${t('removeBtn')}</button>
-          </div>
-        `;
-        box.appendChild(el);
-      });
-      $('onlineContactsCount').textContent = String(onCount);
-    }
-
-    function delContact(id) {
-      savedContacts = savedContacts.filter((c) => c.id !== id);
-      persistContacts();
-    }
-
-    async function callContact(id) {
-      if (!inRoom && !pendingApproval) await joinTarget(id);
-    }
 
     function histKey() { return roomId || 'local'; }
 
@@ -2809,7 +2871,6 @@
 
       renderPendingRequests();
       renderMembers();
-      renderContacts();
     }
 
     (function applyUrlInvite() {
