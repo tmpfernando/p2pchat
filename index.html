@@ -1364,6 +1364,7 @@
     function ensureAudioCtx() {
       if (!audioCtx) {
         const Ctx = window.AudioContext || window.webkitAudioContext;
+        if (!Ctx) return;
         audioCtx = new Ctx();
         roomMixBus = audioCtx.createGain();
         roomMixBus.gain.value = 1;
@@ -1372,7 +1373,7 @@
         roomMixBus.connect(roomMixAnalyser);
         roomMixBus.connect(audioCtx.destination);
       }
-      if (audioCtx.state === 'suspended') {
+      if (audioCtx && audioCtx.state === 'suspended') {
         audioCtx.resume().catch(() => {});
       }
     }
@@ -1409,23 +1410,43 @@
 
     async function initMic() {
       ensureAudioCtx();
-      if (micStream) micStream.getTracks().forEach((t) => t.stop());
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        throw new Error('getUserMedia indisponível');
+      }
+      if (micStream) {
+        micStream.getTracks().forEach((t) => { try { t.stop(); } catch (_) {} });
+        micStream = null;
+      }
       if (micSourceNode) {
         try { micSourceNode.disconnect(); } catch (_) {}
         micSourceNode = null;
       }
 
-      micStream = await navigator.mediaDevices.getUserMedia({
-        audio: {
-          deviceId: prefs.micId && prefs.micId !== 'default' ? { exact: prefs.micId } : undefined,
-          echoCancellation: prefs.nativeAudio,
-          noiseSuppression: prefs.nativeAudio,
-          autoGainControl: prefs.nativeAudio
-        },
-        video: false
-      });
+      const audioConstraints = {
+        echoCancellation: Boolean(prefs.nativeAudio),
+        noiseSuppression: Boolean(prefs.nativeAudio),
+        autoGainControl: Boolean(prefs.nativeAudio)
+      };
+      if (prefs.micId && prefs.micId !== 'default') {
+        audioConstraints.deviceId = { ideal: prefs.micId };
+      }
+
+      try {
+        micStream = await navigator.mediaDevices.getUserMedia({ audio: audioConstraints, video: false });
+      } catch (_) {
+        micStream = await navigator.mediaDevices.getUserMedia({
+          audio: {
+            echoCancellation: Boolean(prefs.nativeAudio),
+            noiseSuppression: Boolean(prefs.nativeAudio),
+            autoGainControl: Boolean(prefs.nativeAudio)
+          },
+          video: false
+        });
+      }
 
       await loadDevices();
+
+      if (!audioCtx) return;
 
       micSourceNode = audioCtx.createMediaStreamSource(micStream);
       hpNode = audioCtx.createBiquadFilter();
@@ -1475,7 +1496,7 @@
       const track = outStream.getAudioTracks()[0];
       Object.values(callsMap).forEach((c) => {
         const sender = c.peerConnection?.getSenders().find((s) => s.track && s.track.kind === 'audio');
-        if (sender && track) sender.replaceTrack(track).catch(() => {});
+        if (sender && track && sender.replaceTrack) sender.replaceTrack(track).catch(() => {});
       });
     }
 
@@ -1495,19 +1516,27 @@
 
     async function loadDevices() {
       try {
+        if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) return;
         const devs = await navigator.mediaDevices.enumerateDevices();
         const mics = devs.filter((d) => d.kind === 'audioinput');
         const cams = devs.filter((d) => d.kind === 'videoinput');
 
         const mSel = $('micSelect');
         mSel.innerHTML = '';
-        mics.forEach((m, i) => {
+        if (!mics.length) {
           const op = document.createElement('option');
-          op.value = m.deviceId;
-          op.textContent = m.label || `🎤 ${i + 1}`;
-          if (m.deviceId === prefs.micId) op.selected = true;
+          op.value = 'default';
+          op.textContent = '🎤 —';
           mSel.appendChild(op);
-        });
+        } else {
+          mics.forEach((m, i) => {
+            const op = document.createElement('option');
+            op.value = m.deviceId;
+            op.textContent = m.label || `🎤 ${i + 1}`;
+            if (m.deviceId === prefs.micId) op.selected = true;
+            mSel.appendChild(op);
+          });
+        }
 
         const cSel = $('camSelect');
         cSel.innerHTML = '';
@@ -1532,7 +1561,7 @@
       ensureAudioCtx();
       const vTracks = rawStream.getVideoTracks();
       const aTracks = rawStream.getAudioTracks();
-      if (!aTracks.length) {
+      if (!aTracks.length || !audioCtx) {
         screenGain = null;
         return new MediaStream(vTracks);
       }
@@ -1642,7 +1671,7 @@
       removeRemoteMedia(pid, 'cam');
     }
 
-    function cleanupSessionState() {
+    function cleanupSessionState({ keepTitle = false } = {}) {
       stopLocalScreen();
       stopLocalCam();
       Object.keys(connsMap).forEach(cleanupPeerResources);
@@ -1659,6 +1688,7 @@
       pendingApproval = false;
       isHost = false;
       roomId = null;
+      if (!keepTitle) roomTitle = '';
       $('stage').querySelectorAll('.video-wrap, .offer-bar').forEach((el) => el.remove());
       updateStage();
       renderMembers();
@@ -1761,15 +1791,26 @@
       resetGuestWaitState();
     }
 
-    function initPeer(targetId = null) {
-      cleanupSessionState();
+    function initPeer({ asHost = false, targetId = null, title = '' } = {}) {
+      cleanupSessionState({ keepTitle: true });
+      isHost = asHost;
+      roomTitle = title || roomTitle;
+
+      if (typeof Peer === 'undefined') {
+        addSystemMsg(`${t('sysError')}: PeerJS não carregado`);
+        isHost = false;
+        syncUI();
+        return;
+      }
+
       peer = new Peer();
 
       peer.on('open', (id) => {
         if (isHost) {
           inRoom = true;
+          pendingApproval = false;
           roomId = id;
-          roomTitle = $('roomNameInput').value.trim() || prefs.name;
+          roomTitle = roomTitle || prefs.name;
           if (prefs.autoCopyLink) {
             const link = getInviteUrl();
             if (link && navigator.clipboard) navigator.clipboard.writeText(link).catch(() => {});
@@ -1779,10 +1820,11 @@
           renderHistory();
         } else {
           pendingApproval = true;
+          inRoom = false;
           roomId = targetId;
-          roomTitle = roomTitle || targetId.slice(0, 6);
+          roomTitle = roomTitle || (targetId ? targetId.slice(0, 6) : '');
           syncUI();
-          requestJoinRoom(targetId);
+          if (targetId) requestJoinRoom(targetId);
         }
       });
 
@@ -1805,7 +1847,7 @@
           });
           call.on('close', () => removeRemoteMedia(call.peer, 'cam'));
         } else {
-          call.answer(outStream);
+          call.answer(outStream || undefined);
           if (callsMap[call.peer] && callsMap[call.peer] !== call) {
             try { callsMap[call.peer].close(); } catch (_) {}
           }
@@ -1815,13 +1857,19 @@
       });
 
       peer.on('error', (e) => {
-        if (pendingApproval) resetGuestWaitState();
-        addSystemMsg(`${t('sysError')}: ${e.type}`);
+        if (pendingApproval || !inRoom) resetGuestWaitState();
+        addSystemMsg(`${t('sysError')}: ${e && e.type ? e.type : 'peer'}`);
       });
     }
 
     function requestJoinRoom(hostId) {
+      if (!peer || !hostId) return;
       const conn = peer.connect(hostId);
+      if (!conn) {
+        addSystemMsg(`${t('sysError')}: connect`);
+        resetGuestWaitState();
+        return;
+      }
       bindConn(conn, { isHostHandshake: true });
       conn.on('open', () => {
         conn.send({
@@ -1867,7 +1915,7 @@
           renderHistory();
           addSystemMsg(t('sysApproved'));
 
-          const call = peer.call(conn.peer, outStream, { metadata: { type: 'audio' } });
+          const call = outStream ? peer.call(conn.peer, outStream, { metadata: { type: 'audio' } }) : null;
           if (call) {
             callsMap[conn.peer] = call;
             call.on('stream', (st) => attachRemoteAudio(conn.peer, st));
@@ -1981,8 +2029,9 @@
     }
 
     function connectApprovedPeer(id) {
-      if (!id || connsMap[id] || id === peer?.id) return;
+      if (!id || connsMap[id] || id === peer?.id || !peer) return;
       const conn = peer.connect(id);
+      if (!conn) return;
       connsMap[id] = conn;
       conn.on('open', () => {
         conn.send({
@@ -2002,7 +2051,7 @@
       });
       bindConn(conn);
 
-      const call = peer.call(id, outStream, { metadata: { type: 'audio' } });
+      const call = outStream ? peer.call(id, outStream, { metadata: { type: 'audio' } }) : null;
       if (call) {
         callsMap[id] = call;
         call.on('stream', (st) => attachRemoteAudio(id, st));
@@ -2037,6 +2086,12 @@
       el.muted = false;
       el.play().catch(() => {});
 
+      if (!audioCtx || !roomMixBus) {
+        remoteAudios[pid] = { el, srcNode: null, gain: null, analyser: null, vol: 100, muted: false, speaking: false };
+        renderMembers();
+        return;
+      }
+
       const srcNode = audioCtx.createMediaStreamSource(stream);
       const analyser = audioCtx.createAnalyser();
       analyser.fftSize = 256;
@@ -2070,7 +2125,7 @@
 
     function syncGain(pid) {
       const ra = remoteAudios[pid];
-      if (!ra || !audioCtx) return;
+      if (!ra || !ra.gain || !audioCtx) return;
       const target = (deafened || ra.muted) ? 0 : Math.max(0, ra.vol / 100);
       ra.gain.gain.setTargetAtTime(target, audioCtx.currentTime, 0.02);
     }
@@ -2242,7 +2297,7 @@
         unlockAudioPlayback();
         localCamStream = await navigator.mediaDevices.getUserMedia({
           video: {
-            deviceId: prefs.camId && prefs.camId !== 'default' ? { exact: prefs.camId } : undefined,
+            deviceId: prefs.camId && prefs.camId !== 'default' ? { ideal: prefs.camId } : undefined,
             width: { ideal: 1280 },
             height: { ideal: 720 }
           },
@@ -2301,6 +2356,7 @@
       d.style.cssText = 'text-align:center; font-size:0.78rem; color:var(--text-soft); padding:2px 0;';
       d.textContent = txt;
       $('messagesList').appendChild(d);
+      $('messagesList').scrollTop = $('messagesList').scrollHeight;
     }
 
     function appendMsg(item) {
@@ -2461,12 +2517,18 @@
     $('confirmCreateRoomBtn').onclick = async () => {
       prefs.autoCopyLink = $('autoCopyLinkChk').checked;
       localStorage.setItem(STORE.prefs, JSON.stringify(prefs));
+      const chosenTitle = $('roomNameInput').value.trim() || prefs.name;
       closeCreateModal();
+
       try {
         await initMic();
-        isHost = true;
-        initPeer();
-      } catch (_) {}
+        micMuted = false;
+      } catch (_) {
+        micMuted = true;
+        addSystemMsg('⚠️ Microfone indisponível — sala criada em modo mudo.');
+      }
+
+      initPeer({ asHost: true, title: chosenTitle });
     };
 
     $('toggleJoinBoxBtn').onclick = () => {
@@ -2479,12 +2541,17 @@
       if (inRoom || pendingApproval) return;
       const target = (id || $('connectIdInput').value).trim();
       if (!target) return;
-      roomTitle = title || target.slice(0, 6);
+      const chosenTitle = title || target.slice(0, 6);
+
       try {
         await initMic();
-        isHost = false;
-        initPeer(target);
-      } catch (_) {}
+        micMuted = false;
+      } catch (_) {
+        micMuted = true;
+        addSystemMsg('⚠️ Microfone indisponível — entrando em modo mudo.');
+      }
+
+      initPeer({ asHost: false, targetId: target, title: chosenTitle });
     }
 
     $('joinRoomBtn').onclick = () => joinTarget();
@@ -2493,8 +2560,15 @@
     $('copyRoomIdBtn').onclick = () => { if (roomId && navigator.clipboard) navigator.clipboard.writeText(roomId).catch(() => {}); };
     $('leaveRoomBtn').onclick = () => cleanupSessionState();
 
-    $('toggleMicBtn').onclick = () => {
+    $('toggleMicBtn').onclick = async () => {
       unlockAudioPlayback();
+      if (!micStream && micMuted) {
+        try {
+          await initMic();
+        } catch (_) {
+          return;
+        }
+      }
       micMuted = !micMuted;
       syncUI();
     };
@@ -2582,7 +2656,7 @@
 
     $('nameInput').oninput = (e) => { prefs.name = e.target.value.trim() || 'User'; savePrefs(); };
     $('colorInput').oninput = (e) => { prefs.color = safeColor(e.target.value); savePrefs(); };
-    $('micSelect').onchange = async (e) => { prefs.micId = e.target.value; savePrefs(); if (micStream) await initMic(); };
+    $('micSelect').onchange = async (e) => { prefs.micId = e.target.value; savePrefs(); if (micStream) await initMic().catch(() => {}); };
     $('camSelect').onchange = async (e) => {
       prefs.camId = e.target.value;
       savePrefs();
@@ -2594,7 +2668,7 @@
     $('modeSelect').onchange = (e) => { prefs.mode = e.target.value; savePrefs(); };
     $('thRange').oninput = (e) => { prefs.threshold = Number(e.target.value); savePrefs(); };
     $('holdRange').oninput = (e) => { prefs.holdMs = Number(e.target.value); savePrefs(); };
-    $('nativeAudioChk').onchange = async (e) => { prefs.nativeAudio = e.target.checked; savePrefs(); if (micStream) await initMic(); };
+    $('nativeAudioChk').onchange = async (e) => { prefs.nativeAudio = e.target.checked; savePrefs(); if (micStream) await initMic().catch(() => {}); };
     $('bindPttBtn').onclick = () => {
       bindingKey = true;
       $('bindPttBtn').textContent = t('pressKeyPrompt');
