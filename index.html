@@ -3,12 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>P2P Link</title>
+  <title>p2pchat</title>
   <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
   <style>
-    /* =====================================================================
-       1. TEMAS (ESCURO, CLARO E COLORIDO RGB SUPER ENFEITADO)
-       ===================================================================== */
     :root, [data-theme="dark"] {
       --bg-app: #0b0f17;
       --bg-surface: #121824;
@@ -48,11 +45,11 @@
     }
 
     [data-theme="colorful"] {
-      --bg-app: #120624;
-      --bg-surface: rgba(18, 10, 36, 0.78);
-      --bg-elevated: rgba(33, 18, 64, 0.82);
-      --bg-input: rgba(52, 26, 94, 0.88);
-      --border: rgba(255, 255, 255, 0.28);
+      --bg-app: #0c041a;
+      --bg-surface: rgba(18, 10, 36, 0.82);
+      --bg-elevated: rgba(33, 18, 64, 0.85);
+      --bg-input: rgba(52, 26, 94, 0.9);
+      --border: rgba(255, 255, 255, 0.3);
       --text-main: #ffffff;
       --text-soft: #f3e5ff;
       --accent: #ff2e93;
@@ -66,25 +63,49 @@
       --shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
     }
 
-    @keyframes rgbAuroraDrift {
+    @keyframes rgbBgShift {
       0% {
-        background-position: 0% 50%, 100% 0%, 50% 100%;
+        background-position: 0% 50%, 100% 10%, 50% 95%, 80% 40%, 15% 85%;
+      }
+      25% {
+        background-position: 65% 20%, 30% 80%, 85% 30%, 20% 70%, 75% 15%;
       }
       50% {
-        background-position: 100% 25%, 0% 80%, 80% 10%;
+        background-position: 100% 75%, 0% 35%, 20% 15%, 60% 90%, 90% 60%;
+      }
+      75% {
+        background-position: 35% 90%, 75% 50%, 60% 75%, 10% 25%, 30% 40%;
       }
       100% {
-        background-position: 0% 50%, 100% 0%, 50% 100%;
+        background-position: 0% 50%, 100% 10%, 50% 95%, 80% 40%, 15% 85%;
       }
     }
 
-    @keyframes rgbSpectrumBorder {
-      0%   { border-color: #ff2e93; box-shadow: 0 0 18px rgba(255, 46, 147, 0.28), var(--shadow); }
-      20%  { border-color: #ff9e00; box-shadow: 0 0 18px rgba(255, 158, 0, 0.28), var(--shadow); }
-      40%  { border-color: #ffe600; box-shadow: 0 0 18px rgba(255, 230, 0, 0.26), var(--shadow); }
-      60%  { border-color: #00f5a0; box-shadow: 0 0 18px rgba(0, 245, 160, 0.28), var(--shadow); }
-      80%  { border-color: #00e5ff; box-shadow: 0 0 18px rgba(0, 229, 255, 0.3), var(--shadow); }
-      100% { border-color: #b537f2; box-shadow: 0 0 18px rgba(181, 55, 242, 0.28), var(--shadow); }
+    @keyframes rgbLedPulse {
+      0% {
+        border-color: #ff2e93;
+        box-shadow: 0 0 12px #ff2e93, 0 0 26px rgba(255, 46, 147, 0.55), inset 0 0 8px rgba(255, 46, 147, 0.25);
+      }
+      20% {
+        border-color: #ff9e00;
+        box-shadow: 0 0 12px #ff9e00, 0 0 26px rgba(255, 158, 0, 0.55), inset 0 0 8px rgba(255, 158, 0, 0.25);
+      }
+      40% {
+        border-color: #ffe600;
+        box-shadow: 0 0 12px #ffe600, 0 0 26px rgba(255, 230, 0, 0.5), inset 0 0 8px rgba(255, 230, 0, 0.22);
+      }
+      60% {
+        border-color: #00f5a0;
+        box-shadow: 0 0 12px #00f5a0, 0 0 26px rgba(0, 245, 160, 0.55), inset 0 0 8px rgba(0, 245, 160, 0.25);
+      }
+      80% {
+        border-color: #00e5ff;
+        box-shadow: 0 0 12px #00e5ff, 0 0 26px rgba(0, 229, 255, 0.55), inset 0 0 8px rgba(0, 229, 255, 0.25);
+      }
+      100% {
+        border-color: #b537f2;
+        box-shadow: 0 0 12px #b537f2, 0 0 26px rgba(181, 55, 242, 0.55), inset 0 0 8px rgba(181, 55, 242, 0.25);
+      }
     }
 
     @keyframes rgbRainbowBar {
@@ -92,33 +113,43 @@
       100% { background-position: 300% 50%; }
     }
 
+    @keyframes rgbEmojiFloat {
+      0% {
+        transform: translate3d(var(--dx-start, 0px), var(--dy-start, 0px), 0) rotate(0deg) scale(0.85);
+      }
+      33% {
+        transform: translate3d(var(--dx-mid1, 18px), var(--dy-mid1, -24px), 0) rotate(120deg) scale(1.12);
+      }
+      66% {
+        transform: translate3d(var(--dx-mid2, -20px), var(--dy-mid2, 16px), 0) rotate(240deg) scale(0.95);
+      }
+      100% {
+        transform: translate3d(var(--dx-start, 0px), var(--dy-start, 0px), 0) rotate(360deg) scale(0.85);
+      }
+    }
+
     [data-theme="colorful"] body {
-      background-color: #120624;
+      background-color: #0c041a;
       background-image:
-        radial-gradient(circle at 12% 18%, rgba(255, 46, 147, 0.55), transparent 42%),
-        radial-gradient(circle at 88% 16%, rgba(0, 229, 255, 0.5), transparent 44%),
-        radial-gradient(circle at 50% 88%, rgba(0, 245, 160, 0.42), transparent 48%),
-        radial-gradient(circle at 75% 65%, rgba(255, 230, 0, 0.28), transparent 42%),
-        radial-gradient(circle at 22% 78%, rgba(181, 55, 242, 0.45), transparent 45%);
-      background-size: 160% 160%;
-      animation: rgbAuroraDrift 14s ease-in-out infinite;
+        radial-gradient(circle at 12% 18%, rgba(255, 46, 147, 0.55), transparent 44%),
+        radial-gradient(circle at 88% 16%, rgba(0, 229, 255, 0.52), transparent 45%),
+        radial-gradient(circle at 50% 88%, rgba(0, 245, 160, 0.45), transparent 48%),
+        radial-gradient(circle at 75% 65%, rgba(255, 230, 0, 0.34), transparent 42%),
+        radial-gradient(circle at 22% 78%, rgba(181, 55, 242, 0.5), transparent 46%);
+      background-size: 190% 190%, 180% 180%, 200% 200%, 175% 175%, 185% 185%;
+      animation: rgbBgShift 12s ease-in-out infinite;
     }
 
     [data-theme="colorful"] .topbar {
       backdrop-filter: blur(12px);
-      border-bottom: 2px solid transparent;
-      background-image:
-        linear-gradient(var(--bg-surface), var(--bg-surface)),
-        linear-gradient(90deg, #ff2e93, #ff9e00, #ffe600, #00f5a0, #00e5ff, #b537f2, #ff2e93);
-      background-origin: border-box;
-      background-clip: padding-box, border-box;
-      background-size: 100% 100%, 300% 100%;
-      animation: rgbRainbowBar 7s linear infinite;
+      border-bottom: 3px solid #ff2e93;
+      animation: rgbLedPulse 5s linear infinite;
     }
 
     [data-theme="colorful"] .card {
       backdrop-filter: blur(12px);
-      animation: rgbSpectrumBorder 9s linear infinite;
+      border-width: 3px;
+      animation: rgbLedPulse 6.5s linear infinite;
     }
 
     [data-theme="colorful"] .logo {
@@ -145,23 +176,43 @@
     [data-theme="colorful"] .msg,
     [data-theme="colorful"] .member,
     [data-theme="colorful"] .stage {
-      border-color: rgba(255, 255, 255, 0.24);
+      border-width: 2px;
+      border-color: rgba(255, 255, 255, 0.34);
     }
 
     [data-theme="colorful"] .list-item:hover {
       border-color: #00e5ff;
-      box-shadow: 0 0 12px rgba(0, 229, 255, 0.25);
+      box-shadow: 0 0 14px rgba(0, 229, 255, 0.45);
     }
 
     [data-theme="colorful"] input[type="text"]:focus,
     [data-theme="colorful"] select:focus {
       border-color: #ff2e93;
-      box-shadow: 0 0 10px rgba(255, 46, 147, 0.35);
+      box-shadow: 0 0 12px rgba(255, 46, 147, 0.55);
     }
 
-    /* =====================================================================
-       2. BASE E LAYOUT MINIMALISTA
-       ===================================================================== */
+    .rgb-emoji-layer {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 5;
+      display: none;
+    }
+
+    [data-theme="colorful"] .rgb-emoji-layer {
+      display: block;
+    }
+
+    .rgb-float-emoji {
+      position: absolute;
+      user-select: none;
+      pointer-events: none;
+      filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.35));
+      animation: rgbEmojiFloat var(--dur, 9s) ease-in-out var(--delay, 0s) infinite;
+      will-change: transform;
+    }
+
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
 
     body {
@@ -191,7 +242,7 @@
     .logo {
       width: 30px; height: 30px; border-radius: 8px;
       background: var(--accent); color: var(--accent-ink);
-      font-weight: 800; font-size: 0.82rem;
+      font-weight: 800; font-size: 0.95rem;
       display: flex; align-items: center; justify-content: center;
       transition: transform 0.25s ease;
     }
@@ -226,11 +277,13 @@
     }
     .theme-btn {
       background: transparent; color: var(--text-soft);
-      padding: 5px 9px; border-radius: 6px; font-size: 0.76rem; font-weight: 600;
+      padding: 5px 9px; border-radius: 6px; font-size: 0.85rem; font-weight: 600;
     }
     .theme-btn.active { background: var(--accent); color: var(--accent-ink); }
 
     .layout {
+      position: relative;
+      z-index: 10;
       flex: 1;
       display: grid;
       grid-template-columns: minmax(0, 1.55fr) 360px;
@@ -274,7 +327,7 @@
     button {
       background: var(--accent); color: var(--accent-ink);
       border: 1px solid transparent; padding: 8px 12px; border-radius: 8px;
-      font-weight: 700; font-size: 0.8rem; cursor: pointer;
+      font-weight: 700; font-size: 0.9rem; cursor: pointer;
       display: inline-flex; align-items: center; justify-content: center; gap: 6px;
       transition:
         transform 0.16s cubic-bezier(0.22, 1, 0.36, 1),
@@ -300,7 +353,84 @@
     button.btn-danger:hover:not(:disabled) { background: var(--danger); filter: brightness(1.08); }
     button.btn-soft { background: var(--bg-elevated); color: var(--text-main); border-color: var(--border); }
     button.btn-soft:hover:not(:disabled) { background: var(--bg-input); border-color: var(--accent); }
-    button.btn-sm { padding: 5px 9px; font-size: 0.75rem; border-radius: 7px; }
+    button.btn-sm { padding: 5px 9px; font-size: 0.82rem; border-radius: 7px; }
+
+    .lobby-box {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .lobby-cta-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    @media (max-width: 520px) {
+      .lobby-cta-row { grid-template-columns: 1fr; }
+    }
+    .join-inline {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 8px;
+      animation: popIn 0.18s ease;
+    }
+
+    .outgoing-banner {
+      background: rgba(245, 158, 11, 0.12);
+      border: 1px solid var(--warn);
+      border-radius: 10px;
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+      animation: popIn 0.18s ease;
+    }
+
+    .session-bar {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .session-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .code-strip {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      padding: 8px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .code-val {
+      font-family: monospace;
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: var(--accent);
+      word-break: break-all;
+    }
+    .link-val {
+      font-family: monospace;
+      font-size: 0.74rem;
+      color: var(--text-soft);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
+    }
 
     .pending-box {
       border-color: var(--warn);
@@ -317,12 +447,6 @@
       gap: 8px;
       flex-wrap: wrap;
       animation: popIn 0.2s ease;
-    }
-
-    .two-col-mini {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 12px;
     }
 
     .list { display: flex; flex-direction: column; gap: 6px; }
@@ -347,7 +471,6 @@
       border: 1px solid var(--border);
     }
 
-    /* Palco de Tela e Câmera */
     .stage {
       min-height: 220px; background: var(--bg-elevated);
       border: 1px dashed var(--border); border-radius: 10px;
@@ -377,7 +500,7 @@
     }
     .video-tag {
       background: rgba(0, 0, 0, 0.72); color: #fff;
-      padding: 4px 9px; border-radius: 6px; font-size: 0.74rem; font-weight: 600;
+      padding: 4px 9px; border-radius: 6px; font-size: 0.82rem; font-weight: 600;
     }
     .video-top .row { pointer-events: auto; }
 
@@ -386,7 +509,6 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* Participantes + Bolinha Balançando para Todos os Lados ao Falar */
     .members {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -430,7 +552,6 @@
     .vol-row input[type="range"] { flex: 1; accent-color: var(--accent); cursor: pointer; }
     .vol-val { font-size: 0.7rem; color: var(--text-soft); width: 32px; text-align: right; }
 
-    /* Chat & Arquivos */
     .chat-panel { display: flex; flex-direction: column; height: 100%; min-height: 360px; }
     .msgs {
       flex: 1; overflow-y: auto; display: flex; flex-direction: column;
@@ -454,7 +575,6 @@
     .file-name { font-size: 0.78rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .file-img { max-width: 100%; max-height: 150px; border-radius: 6px; margin-top: 4px; }
 
-    /* Modal de Ajustes */
     .modal-bg {
       position: fixed; inset: 0; background: rgba(0, 0, 0, 0.65);
       display: none; align-items: center; justify-content: center; z-index: 100; padding: 12px;
@@ -487,24 +607,26 @@
 </head>
 <body data-theme="dark">
 
+  <div class="rgb-emoji-layer" id="rgbEmojiLayer" aria-hidden="true"></div>
+
   <header class="topbar">
     <div class="brand-group">
-      <div class="logo">P2P</div>
-      <span class="brand-title">P2P Link</span>
+      <div class="logo">💬</div>
+      <span class="brand-title">p2pchat</span>
       <div class="status-pill" id="roomStatusPill">
         <span class="dot"></span>
-        <span id="roomStatusText">Fora de sala</span>
+        <span id="roomStatusText">⏸️</span>
       </div>
     </div>
 
     <div class="top-actions">
       <div class="theme-switch">
-        <button class="theme-btn active" data-theme-btn="dark" onclick="setTheme('dark')">🌙 Escuro</button>
-        <button class="theme-btn" data-theme-btn="light" onclick="setTheme('light')">☀️ Claro</button>
-        <button class="theme-btn" data-theme-btn="colorful" onclick="setTheme('colorful')">🌈 RGB</button>
+        <button class="theme-btn active" data-theme-btn="dark" onclick="setTheme('dark')" title="Escuro">🌙</button>
+        <button class="theme-btn" data-theme-btn="light" onclick="setTheme('light')" title="Claro">☀️</button>
+        <button class="theme-btn" data-theme-btn="colorful" onclick="setTheme('colorful')" title="RGB">🌈</button>
       </div>
-      <button class="btn-soft btn-sm" onclick="openModal('voice')">🎙️ Voz & Câmera</button>
-      <button class="btn-soft btn-sm" onclick="openModal('profile')">👤 Perfil</button>
+      <button class="btn-soft btn-sm" onclick="openModal('voice')" title="Áudio & Vídeo">🎙️</button>
+      <button class="btn-soft btn-sm" onclick="openModal('profile')" title="Perfil">👤</button>
     </div>
   </header>
 
@@ -513,97 +635,96 @@
     <section class="stack main-col">
 
       <div class="card">
-        <div class="row">
-          <input type="text" class="grow" id="roomNameInput" placeholder="Nome da sala" />
-          <input type="text" class="grow" id="connectIdInput" placeholder="ID da sala ou contato" />
-          <button class="btn-ok" id="createRoomBtn">Criar Sala</button>
-          <button id="joinRoomBtn">Solicitar Entrada</button>
+        <div class="lobby-box" id="lobbyView">
+          <div class="lobby-cta-row">
+            <button class="btn-ok" id="openCreateModalBtn" title="Criar">➕ 🏠</button>
+            <button class="btn-soft" id="toggleJoinBoxBtn" title="Entrar">🚪 🔑</button>
+          </div>
+          <div class="join-inline" id="joinInlineBox" style="display:none;">
+            <input type="text" class="grow" id="connectIdInput" placeholder="🔑" />
+            <button class="btn-ok btn-sm" id="joinRoomBtn" title="Entrar">🚪</button>
+          </div>
         </div>
 
-        <div class="row" id="roomSessionBar" style="display:none; justify-content:space-between; padding-top:6px; border-top:1px solid var(--border);">
-          <div class="row">
-            <strong id="activeRoomTitle" style="font-size:0.86rem;"></strong>
-            <span class="muted" id="activeRoomIdLabel" style="font-family:monospace;"></span>
+        <div class="outgoing-banner" id="outgoingRequestView" style="display:none;">
+          <div class="item-main">
+            <div class="item-title">⏳ 🚪 <span id="outgoingRoomName"></span></div>
+            <div class="code-val" id="outgoingRoomCode"></div>
           </div>
-          <div class="row">
-            <button class="btn-soft btn-sm" id="copyRoomIdBtn">Copiar ID</button>
-            <button class="btn-soft btn-sm" id="copyInviteLinkBtn">Copiar Link</button>
-            <button class="btn-soft btn-sm" id="saveActiveRoomBtn">Salvar Sala</button>
-            <button class="btn-danger btn-sm" id="leaveRoomBtn">Abandonar Sala</button>
+          <button class="btn-danger btn-sm" id="cancelJoinBtn" title="Cancelar">✕</button>
+        </div>
+
+        <div class="session-bar" id="roomSessionBar" style="display:none;">
+          <div class="session-top">
+            <div class="row">
+              <span class="chip-on" id="sessionRoleBadge">👑</span>
+              <strong id="activeRoomTitle" style="font-size:0.9rem;"></strong>
+            </div>
+            <div class="row">
+              <button class="btn-danger btn-sm" id="leaveRoomBtn" title="Sair">🚪</button>
+            </div>
+          </div>
+
+          <div class="code-strip">
+            <div class="item-main">
+              <div class="code-val" id="activeRoomIdLabel"></div>
+              <div class="link-val" id="activeInviteLinkLabel"></div>
+            </div>
+            <div class="row">
+              <button class="btn-soft btn-sm" id="copyRoomIdBtn" title="Código">🔑</button>
+              <button class="btn-soft btn-sm" id="copyInviteLinkBtn" title="Link">🔗</button>
+            </div>
           </div>
         </div>
       </div>
 
       <div class="card pending-box" id="pendingRequestsCard" style="display:none;">
         <div class="card-head">
-          <span class="card-title">🔒 Pedidos de Entrada Pendentes</span>
-          <span class="muted">Apenas o criador aprova</span>
+          <span class="card-title">🔒 🚪</span>
         </div>
         <div class="list" id="pendingRequestsList"></div>
       </div>
 
       <div class="card">
-        <div class="card-head">
-          <span class="card-title">Tela & Câmera</span>
-          <span class="muted" id="voiceHint">Detecção automática</span>
-        </div>
-
         <div class="stage" id="stage">
-          <div id="stageEmpty" style="text-align:center; width:100%;">
-            <div style="font-size:0.84rem; font-weight:700;">Nenhuma transmissão aberta</div>
-            <div class="muted">Telas e câmeras de outros usuários só abrem ao clicar em <b>Assistir</b>, mesmo se você entrar depois.</div>
-          </div>
+          <div id="stageEmpty" style="text-align:center; width:100%; font-size:1.4rem;">🖥️</div>
         </div>
 
         <div class="row">
-          <button id="toggleMicBtn" disabled>🎤 Mic Ligado</button>
-          <button class="btn-soft" id="pttBtn" disabled style="display:none;">⌨️ Falar</button>
-          <button class="btn-soft" id="toggleDeafenBtn" disabled>🎧 Som Ligado</button>
-          <button class="btn-soft" id="toggleScreenBtn" disabled>🖥️ Compartilhar Tela</button>
-          <button class="btn-soft" id="toggleCamBtn" disabled>📷 Câmera</button>
+          <button id="toggleMicBtn" disabled title="Microfone">🎤</button>
+          <button class="btn-soft" id="pttBtn" disabled style="display:none;" title="PTT">🎙️</button>
+          <button class="btn-soft" id="toggleDeafenBtn" disabled title="Som">🎧</button>
+          <button class="btn-soft" id="toggleScreenBtn" disabled title="Tela">🖥️</button>
+          <button class="btn-soft" id="toggleCamBtn" disabled title="Câmera">📷</button>
         </div>
       </div>
 
       <div class="card">
         <div class="card-head">
-          <span class="card-title">Participantes</span>
-          <span class="muted">Bolinha balança ao falar</span>
+          <span class="card-title">👥</span>
         </div>
         <div class="members" id="membersGrid"></div>
       </div>
 
-      <div class="two-col-mini">
-        <div class="card">
-          <div class="card-head">
-            <span class="card-title">Salas Salvas</span>
-            <button class="btn-soft btn-sm" id="saveManualRoomBtn">+ Salvar</button>
-          </div>
-          <div class="list" id="savedRoomsList"></div>
+      <div class="card">
+        <div class="card-head">
+          <span class="card-title">📇</span>
+          <span class="muted" id="onlineContactsCount">0</span>
         </div>
-
-        <div class="card">
-          <div class="card-head">
-            <span class="card-title">Contatos</span>
-            <span class="muted" id="onlineContactsCount">0 ativos</span>
-          </div>
-          <div class="row">
-            <input type="text" class="grow" id="contactNameInput" placeholder="Nome" />
-            <input type="text" class="grow" id="contactIdInput" placeholder="ID" />
-            <button class="btn-soft btn-sm" id="addContactBtn">+</button>
-          </div>
-          <div class="list" id="contactsList"></div>
+        <div class="row">
+          <input type="text" class="grow" id="contactNameInput" placeholder="👤" />
+          <input type="text" class="grow" id="contactIdInput" placeholder="🔑" />
+          <button class="btn-soft btn-sm" id="addContactBtn" title="Adicionar">➕</button>
         </div>
+        <div class="list" id="contactsList"></div>
       </div>
 
     </section>
 
     <aside class="card chat-panel">
       <div class="card-head">
-        <div>
-          <div class="card-title">Mensagens & Arquivos</div>
-          <div class="muted" id="historyLabel">Histórico local</div>
-        </div>
-        <button class="btn-soft btn-sm" id="clearHistoryBtn">Limpar</button>
+        <span class="card-title">💬</span>
+        <button class="btn-soft btn-sm" id="clearHistoryBtn" title="Limpar">🗑️</button>
       </div>
 
       <div class="msgs" id="messagesList"></div>
@@ -612,48 +733,67 @@
         <div class="muted" id="typingIndicator" style="min-height:14px;"></div>
         <input type="file" id="fileInput" multiple style="display:none;" />
         <div class="row">
-          <button class="btn-soft btn-sm" id="sendFileBtn" disabled>📎 Arquivo</button>
-          <input type="text" class="grow" id="msgInput" placeholder="Escreva uma mensagem..." disabled />
-          <button class="btn-sm" id="sendMsgBtn" disabled>Enviar</button>
+          <button class="btn-soft btn-sm" id="sendFileBtn" disabled title="Arquivo">📎</button>
+          <input type="text" class="grow" id="msgInput" placeholder="💬" disabled />
+          <button class="btn-sm" id="sendMsgBtn" disabled title="Enviar">➤</button>
         </div>
-        <div class="muted" id="transferStatus">Envio direto via P2P.</div>
+        <div class="muted" id="transferStatus" style="min-height:14px;"></div>
       </div>
     </aside>
 
   </main>
 
+  <div class="modal-bg" id="createRoomModal">
+    <div class="modal" style="width:420px;">
+      <div class="modal-head">
+        <span>➕ 🏠</span>
+        <button class="btn-soft btn-sm" onclick="closeCreateModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <input type="text" id="roomNameInput" placeholder="🏷️" />
+        <label class="muted" style="display:flex; align-items:center; gap:6px; cursor:pointer;">
+          <input type="checkbox" id="autoCopyLinkChk" checked /> 🔗 📋
+        </label>
+        <div class="row" style="justify-content:flex-end; padding-top:6px;">
+          <button class="btn-soft btn-sm" onclick="closeCreateModal()">✕</button>
+          <button class="btn-ok btn-sm" id="confirmCreateRoomBtn">✓ 🏠</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="modal-bg" id="settingsModal">
     <div class="modal">
       <div class="modal-head">
-        <span>Ajustes</span>
+        <span>⚙️</span>
         <button class="btn-soft btn-sm" onclick="closeModal()">✕</button>
       </div>
       <div class="modal-tabs">
-        <button class="m-tab active" id="tab-voice" onclick="switchTab('voice')">🎙️ Voz & Câmera</button>
-        <button class="m-tab" id="tab-profile" onclick="switchTab('profile')">👤 Perfil</button>
+        <button class="m-tab active" id="tab-voice" onclick="switchTab('voice')">🎙️ 📷</button>
+        <button class="m-tab" id="tab-profile" onclick="switchTab('profile')">👤</button>
       </div>
       <div class="modal-body">
         <div class="m-pane active" id="pane-voice">
           <div class="row">
             <select id="micSelect" class="grow"></select>
             <select id="camSelect" class="grow"></select>
-            <button class="btn-soft btn-sm" onclick="loadDevices()">Atualizar</button>
+            <button class="btn-soft btn-sm" onclick="loadDevices()" title="Atualizar">🔄</button>
           </div>
 
           <div class="card" style="box-shadow:none; padding:10px;">
             <div class="card-head">
-              <span class="card-title">Filtro Vocal</span>
+              <span class="card-title">🎛️</span>
               <label class="muted" style="display:flex; align-items:center; gap:5px; cursor:pointer;">
-                <input type="checkbox" id="filterChk" checked /> Ativo
+                <input type="checkbox" id="filterChk" checked /> ⚡
               </label>
             </div>
             <div class="row">
               <div class="grow">
-                <div class="slider-lbl"><span>High-Pass</span><span id="hpOut">105 Hz</span></div>
+                <div class="slider-lbl"><span>HPF</span><span id="hpOut">105 Hz</span></div>
                 <input type="range" id="hpRange" min="60" max="240" step="5" value="105" />
               </div>
               <div class="grow">
-                <div class="slider-lbl"><span>Low-Pass</span><span id="lpOut">3700 Hz</span></div>
+                <div class="slider-lbl"><span>LPF</span><span id="lpOut">3700 Hz</span></div>
                 <input type="range" id="lpRange" min="2400" max="7500" step="100" value="3700" />
               </div>
             </div>
@@ -661,14 +801,14 @@
 
           <div class="card" style="box-shadow:none; padding:10px;">
             <select id="modeSelect">
-              <option value="vad">Detecção Automática</option>
-              <option value="ptt">Push-to-Talk</option>
+              <option value="vad">🎙️⚡</option>
+              <option value="ptt">⌨️🎙️</option>
             </select>
 
             <div id="vadBox" class="stack" style="gap:8px; margin-top:4px;">
               <div class="card-head">
-                <span class="muted">Nível vocal</span>
-                <span class="muted" id="gateState">FECHADO</span>
+                <span class="muted">📊</span>
+                <span class="muted" id="gateState">🔒</span>
               </div>
               <div class="vu">
                 <div class="vu-fill" id="vuFill"></div>
@@ -676,35 +816,35 @@
               </div>
               <div class="row">
                 <div class="grow">
-                  <div class="slider-lbl"><span>Threshold</span><span id="thOut">18%</span></div>
+                  <div class="slider-lbl"><span>🎚️</span><span id="thOut">18%</span></div>
                   <input type="range" id="thRange" min="1" max="95" value="18" />
                 </div>
                 <div class="grow">
-                  <div class="slider-lbl"><span>Hold</span><span id="holdOut">250 ms</span></div>
+                  <div class="slider-lbl"><span>⏱️</span><span id="holdOut">250 ms</span></div>
                   <input type="range" id="holdRange" min="50" max="800" step="25" value="250" />
                 </div>
               </div>
             </div>
 
             <div id="pttBox" style="display:none; margin-top:4px;">
-              <button class="btn-soft" id="bindPttBtn">Tecla: <strong id="pttKeyLabel">Espaço</strong></button>
+              <button class="btn-soft" id="bindPttBtn">⌨️ <strong id="pttKeyLabel">Espaço</strong></button>
             </div>
           </div>
 
           <label class="muted" style="display:flex; align-items:center; gap:6px; cursor:pointer;">
-            <input type="checkbox" id="nativeAudioChk" checked /> Cancelamento de eco e ruído nativo
+            <input type="checkbox" id="nativeAudioChk" checked /> 🔇✨
           </label>
         </div>
 
         <div class="m-pane" id="pane-profile">
           <div class="row">
             <div class="avatar" id="previewAvatar" style="width:52px; height:52px;">U</div>
-            <button class="btn-soft btn-sm" onclick="document.getElementById('avatarFile').click()">Foto</button>
-            <button class="btn-soft btn-sm" onclick="removeAvatar()">Remover</button>
+            <button class="btn-soft btn-sm" onclick="document.getElementById('avatarFile').click()" title="Foto">🖼️</button>
+            <button class="btn-soft btn-sm" onclick="removeAvatar()" title="Remover">✕</button>
             <input type="file" id="avatarFile" accept="image/*" style="display:none;" />
           </div>
           <div class="row">
-            <input type="text" class="grow" id="nameInput" placeholder="Seu nome" />
+            <input type="text" class="grow" id="nameInput" placeholder="👤" />
             <input type="color" id="colorInput" value="#38bdf8" style="width:54px; height:34px; border:none; background:transparent; cursor:pointer;" />
           </div>
         </div>
@@ -714,15 +854,14 @@
 
   <script>
     const STORE = {
-      prefs: 'p2plink_min_prefs_v2',
-      rooms: 'p2plink_min_rooms_v1',
-      contacts: 'p2plink_min_contacts_v1',
-      history: 'p2plink_min_history_v1'
+      prefs: 'p2pchat_prefs_v3',
+      contacts: 'p2pchat_contacts_v1',
+      history: 'p2pchat_history_v1'
     };
 
     const defaults = {
       theme: 'dark',
-      name: 'Usuário',
+      name: 'User',
       color: '#38bdf8',
       photo: null,
       micId: 'default',
@@ -734,12 +873,12 @@
       threshold: 18,
       holdMs: 250,
       pttCode: 'Space',
-      pttLabel: 'Espaço',
-      nativeAudio: true
+      pttLabel: 'Space',
+      nativeAudio: true,
+      autoCopyLink: true
     };
 
     let prefs = { ...defaults, ...JSON.parse(localStorage.getItem(STORE.prefs) || '{}') };
-    let savedRooms = JSON.parse(localStorage.getItem(STORE.rooms) || '[]');
     let savedContacts = JSON.parse(localStorage.getItem(STORE.contacts) || '[]');
     let historyMap = JSON.parse(localStorage.getItem(STORE.history) || '{}');
 
@@ -748,8 +887,47 @@
     let isHost = false;
     let roomId = null;
     let roomTitle = '';
+    let joinBoxOpen = false;
 
     const $ = (id) => document.getElementById(id);
+
+    const RGB_EMOJIS = ['🌈', '🦄', '⭐', '✨', '💖', '🦋', '🌸', '🍭', '💎', '🌟', '🎉', '🔮', '🫧', '🌺'];
+
+    function spawnRgbEmojis() {
+      const layer = $('rgbEmojiLayer');
+      layer.innerHTML = '';
+      const count = 26;
+      for (let i = 0; i < count; i++) {
+        const el = document.createElement('span');
+        el.className = 'rgb-float-emoji';
+        el.textContent = RGB_EMOJIS[Math.floor(Math.random() * RGB_EMOJIS.length)];
+
+        const size = (1.1 + Math.random() * 1.35).toFixed(2) + 'rem';
+        const left = (Math.random() * 96).toFixed(1) + '%';
+        const top = (Math.random() * 94).toFixed(1) + '%';
+        const dur = (7 + Math.random() * 8).toFixed(1) + 's';
+        const delay = (-Math.random() * 10).toFixed(1) + 's';
+
+        const dx1 = ((Math.random() - 0.5) * 60).toFixed(0) + 'px';
+        const dy1 = ((Math.random() - 0.5) * 60).toFixed(0) + 'px';
+        const dx2 = ((Math.random() - 0.5) * 60).toFixed(0) + 'px';
+        const dy2 = ((Math.random() - 0.5) * 60).toFixed(0) + 'px';
+
+        el.style.fontSize = size;
+        el.style.left = left;
+        el.style.top = top;
+        el.style.setProperty('--dur', dur);
+        el.style.setProperty('--delay', delay);
+        el.style.setProperty('--dx-start', '0px');
+        el.style.setProperty('--dy-start', '0px');
+        el.style.setProperty('--dx-mid1', dx1);
+        el.style.setProperty('--dy-mid1', dy1);
+        el.style.setProperty('--dx-mid2', dx2);
+        el.style.setProperty('--dy-mid2', dy2);
+
+        layer.appendChild(el);
+      }
+    }
 
     function setTheme(t) {
       prefs.theme = t;
@@ -757,6 +935,11 @@
       document.querySelectorAll('[data-theme-btn]').forEach((b) => {
         b.classList.toggle('active', b.dataset.themeBtn === t);
       });
+      if (t === 'colorful') {
+        spawnRgbEmojis();
+      } else {
+        $('rgbEmojiLayer').innerHTML = '';
+      }
       localStorage.setItem(STORE.prefs, JSON.stringify(prefs));
     }
 
@@ -765,11 +948,6 @@
       applyFilters();
       syncUI();
       broadcastHello();
-    }
-
-    function persistRooms() {
-      localStorage.setItem(STORE.rooms, JSON.stringify(savedRooms));
-      renderRooms();
     }
 
     function persistContacts() {
@@ -784,7 +962,6 @@
       localStorage.setItem(STORE.history, JSON.stringify(historyMap));
     }
 
-    // Áudio + Filtro + Continuidade em segundo plano
     let audioCtx = null;
     let roomMixBus = null;
     let roomMixAnalyser = null;
@@ -814,12 +991,8 @@
         roomMixBus.connect(roomMixAnalyser);
         roomMixBus.connect(audioCtx.destination);
       }
-      if (audioCtx.state === 'suspended') {
-        audioCtx.resume().catch(() => {});
-      }
-      if (screenCtx && screenCtx.state === 'suspended') {
-        screenCtx.resume().catch(() => {});
-      }
+      if (audioCtx.state === 'suspended') audioCtx.resume().catch(() => {});
+      if (screenCtx && screenCtx.state === 'suspended') screenCtx.resume().catch(() => {});
     }
 
     document.addEventListener('visibilitychange', () => {
@@ -935,7 +1108,7 @@
         mics.forEach((m, i) => {
           const op = document.createElement('option');
           op.value = m.deviceId;
-          op.textContent = m.label || `Microfone ${i + 1}`;
+          op.textContent = m.label || `🎤 ${i + 1}`;
           if (m.deviceId === prefs.micId) op.selected = true;
           mSel.appendChild(op);
         });
@@ -945,13 +1118,13 @@
         if (!cams.length) {
           const op = document.createElement('option');
           op.value = 'default';
-          op.textContent = 'Nenhuma câmera detectada';
+          op.textContent = '📷 —';
           cSel.appendChild(op);
         } else {
           cams.forEach((c, i) => {
             const op = document.createElement('option');
             op.value = c.deviceId;
-            op.textContent = c.label || `Câmera ${i + 1}`;
+            op.textContent = c.label || `📷 ${i + 1}`;
             if (c.deviceId === prefs.camId) op.selected = true;
             cSel.appendChild(op);
           });
@@ -1011,7 +1184,7 @@
           if (open !== gateOpen) {
             gateOpen = open;
             if ($('gateState')) {
-              $('gateState').textContent = open ? 'ABERTO' : 'FECHADO';
+              $('gateState').textContent = open ? '🔓' : '🔒';
               $('gateState').style.color = open ? 'var(--ok)' : 'var(--text-soft)';
             }
           }
@@ -1044,7 +1217,6 @@
       requestAnimationFrame(tick);
     }
 
-    // P2P + Aprovação pelo criador da sala
     let peer = null;
     let rawDisplay = null;
     const connsMap = {};
@@ -1059,9 +1231,7 @@
     const transfers = {};
     const CHUNK = 32768;
 
-    function isAuthorizedPeer(pid) {
-      return Boolean(peersMap[pid]);
-    }
+    function isAuthorizedPeer(pid) { return Boolean(peersMap[pid]); }
 
     function callScreenToPeer(targetId) {
       if (!peer || !screenOutStream || !targetId || !isAuthorizedPeer(targetId)) return;
@@ -1094,12 +1264,12 @@
         div.className = 'pending-item';
         div.innerHTML = `
           <div class="item-main">
-            <div class="item-title">👤 ${esc(item.profile?.name || 'Visitante')}</div>
-            <div class="item-sub">ID: ${esc(pid)}</div>
+            <div class="item-title">👤 ${esc(item.profile?.name || '—')}</div>
+            <div class="item-sub">${esc(pid)}</div>
           </div>
           <div class="row">
-            <button class="btn-ok btn-sm" onclick="approveJoinRequest('${esc(pid)}')">✓ Aprovar</button>
-            <button class="btn-danger btn-sm" onclick="rejectJoinRequest('${esc(pid)}')">✕ Recusar</button>
+            <button class="btn-ok btn-sm" onclick="approveJoinRequest('${esc(pid)}')">✓</button>
+            <button class="btn-danger btn-sm" onclick="rejectJoinRequest('${esc(pid)}')">✕</button>
           </div>
         `;
         list.appendChild(div);
@@ -1119,7 +1289,7 @@
       renderMembers();
       renderContacts();
       syncUI();
-      addSystemMsg(`${profile.name} foi aprovado e entrou na sala.`);
+      addSystemMsg(`➕ ${profile.name}`);
 
       if (conn.open) {
         conn.send({
@@ -1131,9 +1301,7 @@
       }
 
       Object.entries(connsMap).forEach(([oid, c]) => {
-        if (oid !== pid && c.open) {
-          c.send({ type: 'peer-joined', peerId: pid, profile });
-        }
+        if (oid !== pid && c.open) c.send({ type: 'peer-joined', peerId: pid, profile });
       });
     }
 
@@ -1143,39 +1311,48 @@
       const { conn } = item;
       delete pendingConns[pid];
       renderPendingRequests();
-
       if (conn.open) {
-        conn.send({ type: 'join-rejected', reason: 'Entrada não aprovada pelo criador da sala.' });
+        conn.send({ type: 'join-rejected' });
         setTimeout(() => { try { conn.close(); } catch (_) {} }, 150);
       }
     }
 
-    function resetGuestWaitState(msgText = 'Fora de sala') {
+    function resetGuestWaitState(iconText = '⏸️') {
       pendingApproval = false;
       inRoom = false;
+      isHost = false;
       roomId = null;
+      if (peer) { try { peer.destroy(); } catch (_) {} peer = null; }
       syncUI();
-      $('roomStatusText').textContent = msgText;
+      $('roomStatusText').textContent = iconText;
+    }
+
+    function cancelOutgoingJoin() {
+      resetGuestWaitState('⏸️');
     }
 
     function initPeer(targetId = null) {
+      if (peer) { try { peer.destroy(); } catch (_) {} peer = null; }
       peer = new Peer();
       peer.on('open', (id) => {
         if (isHost) {
           inRoom = true;
           roomId = id;
-          roomTitle = $('roomNameInput').value.trim() || `Sala de ${prefs.name}`;
+          roomTitle = $('roomNameInput').value.trim() || prefs.name;
+          if (prefs.autoCopyLink) {
+            const link = getInviteUrl();
+            if (link && navigator.clipboard) navigator.clipboard.writeText(link).catch(() => {});
+          }
           syncUI();
-          renderRooms();
           renderContacts();
           renderMembers();
           renderHistory();
         } else {
           pendingApproval = true;
           roomId = targetId;
-          roomTitle = $('roomNameInput').value.trim() || `Sala ${targetId.slice(0, 6)}`;
+          roomTitle = roomTitle || targetId.slice(0, 6);
           syncUI();
-          $('roomStatusText').textContent = 'Aguardando aprovação...';
+          $('roomStatusText').textContent = '⏳';
           requestJoinRoom(targetId);
         }
       });
@@ -1183,10 +1360,7 @@
       peer.on('connection', (c) => bindConn(c));
 
       peer.on('call', (call) => {
-        if (!isAuthorizedPeer(call.peer)) {
-          try { call.close(); } catch (_) {}
-          return;
-        }
+        if (!isAuthorizedPeer(call.peer)) { try { call.close(); } catch (_) {} return; }
         const kind = call.metadata?.type;
         if (kind === 'screen') {
           call.answer();
@@ -1204,8 +1378,8 @@
       });
 
       peer.on('error', (e) => {
-        if (pendingApproval) resetGuestWaitState('Fora de sala');
-        alert('Erro P2P: ' + e.type);
+        if (pendingApproval) resetGuestWaitState('⏸️');
+        addSystemMsg('⚠️ ' + e.type);
       });
     }
 
@@ -1229,31 +1403,31 @@
           if (!isHost) return;
           pendingConns[conn.peer] = {
             conn,
-            profile: msg.profile || { name: 'Visitante', color: '#38bdf8', photo: null }
+            profile: msg.profile || { name: '—', color: '#38bdf8', photo: null }
           };
           renderPendingRequests();
           return;
         }
 
         if (msg.type === 'join-rejected') {
-          alert(msg.reason || 'O criador da sala recusou sua entrada.');
-          resetGuestWaitState('Fora de sala');
+          resetGuestWaitState('⏸️');
+          addSystemMsg('🚫');
           return;
         }
 
         if (msg.type === 'join-approved') {
           pendingApproval = false;
           inRoom = true;
+          isHost = false;
           roomTitle = msg.roomTitle || roomTitle;
           connsMap[conn.peer] = conn;
-          peersMap[conn.peer] = msg.hostProfile || { name: 'Criador', color: '#10b981', photo: null };
+          peersMap[conn.peer] = msg.hostProfile || { name: '👑', color: '#10b981', photo: null };
 
           syncUI();
-          renderRooms();
           renderContacts();
           renderMembers();
           renderHistory();
-          addSystemMsg('Sua entrada foi aprovada.');
+          addSystemMsg('✅');
 
           const call = peer.call(conn.peer, outStream, { metadata: { type: 'audio' } });
           callsMap[conn.peer] = call;
@@ -1305,8 +1479,8 @@
         } else if (msg.type === 'cam-stopped') {
           removeRemoteMedia(conn.peer, 'cam');
         } else if (msg.type === 'typing') {
-          const who = peersMap[conn.peer]?.name || 'Alguém';
-          $('typingIndicator').textContent = msg.active ? `${who} está digitando...` : '';
+          const who = peersMap[conn.peer]?.name || '👤';
+          $('typingIndicator').textContent = msg.active ? `${who} ✍️` : '';
           clearTimeout(typingTimeout);
           if (msg.active) typingTimeout = setTimeout(() => { $('typingIndicator').textContent = ''; }, 2000);
         } else if (msg.type === 'chat') {
@@ -1315,13 +1489,13 @@
           addMsg({ kind: 'text', sender: p.name, color: p.color, photo: p.photo, text: msg.text, time: msg.time || nowTime() });
         } else if (msg.type === 'f-start') {
           transfers[msg.id] = { meta: msg, chunks: [], bytes: 0 };
-          $('transferStatus').textContent = `Recebendo ${msg.name}...`;
+          $('transferStatus').textContent = `📥 ${msg.name}`;
         } else if (msg.type === 'f-chunk') {
           const tr = transfers[msg.id];
           if (!tr) return;
           tr.chunks.push(msg.data);
           tr.bytes += msg.data.byteLength || 0;
-          $('transferStatus').textContent = `Recebendo ${tr.meta.name} (${Math.min(100, Math.round((tr.bytes / tr.meta.size) * 100))}%)`;
+          $('transferStatus').textContent = `📥 ${Math.min(100, Math.round((tr.bytes / tr.meta.size) * 100))}%`;
         } else if (msg.type === 'f-end') {
           const tr = transfers[msg.id];
           if (!tr) return;
@@ -1332,25 +1506,18 @@
               kind: 'file', sender: p.name, color: p.color, photo: p.photo,
               fileName: tr.meta.name, fileSize: tr.meta.size, fileMime: tr.meta.mime, fileUrl: url, time: nowTime()
             });
-            $('transferStatus').textContent = `Recebido: ${tr.meta.name}`;
+            $('transferStatus').textContent = `📥 ${tr.meta.name} ✓`;
           });
           delete transfers[msg.id];
         }
       });
 
       conn.on('close', () => {
-        if (pendingConns[conn.peer]) {
-          delete pendingConns[conn.peer];
-          renderPendingRequests();
-          return;
-        }
-        if (opts.isHostHandshake && pendingApproval) {
-          resetGuestWaitState('Fora de sala');
-          return;
-        }
+        if (pendingConns[conn.peer]) { delete pendingConns[conn.peer]; renderPendingRequests(); return; }
+        if (opts.isHostHandshake && pendingApproval) { resetGuestWaitState('⏸️'); return; }
         if (!isAuthorizedPeer(conn.peer)) return;
 
-        const who = peersMap[conn.peer]?.name || 'Participante';
+        const who = peersMap[conn.peer]?.name || '👤';
         delete connsMap[conn.peer];
         delete peersMap[conn.peer];
         delete callsMap[conn.peer];
@@ -1362,7 +1529,7 @@
         renderMembers();
         renderContacts();
         syncUI();
-        addSystemMsg(`${who} saiu.`);
+        addSystemMsg(`➖ ${who}`);
       });
     }
 
@@ -1475,17 +1642,16 @@
       vid.controls = true;
       vid.srcObject = st;
 
-      const name = peersMap[pid]?.name || 'Participante';
+      const name = peersMap[pid]?.name || '—';
       const icon = kind === 'cam' ? '📷' : '🖥️';
-      const label = kind === 'cam' ? `Câmera de ${name}` : `Tela de ${name}`;
 
       const top = document.createElement('div');
       top.className = 'video-top';
       top.innerHTML = `
-        <span class="video-tag">${icon} ${esc(label)}</span>
+        <span class="video-tag">${icon} ${esc(name)}</span>
         <div class="row">
-          <button class="btn-soft btn-sm" onclick="triggerPip('view-${key}')" title="Janela flutuante">⧉ PiP</button>
-          <button class="btn-soft btn-sm" onclick="closeViewerMedia('${esc(pid)}', '${kind}')">✕ Fechar</button>
+          <button class="btn-soft btn-sm" onclick="triggerPip('view-${key}')" title="PiP">⧉</button>
+          <button class="btn-soft btn-sm" onclick="closeViewerMedia('${esc(pid)}', '${kind}')" title="Fechar">✕</button>
         </div>
       `;
 
@@ -1518,21 +1684,17 @@
       entries.forEach(({ pid, kind }) => {
         const key = `${kind}-${pid}`;
         if (document.getElementById(`view-${key}`) || document.getElementById(`offer-${key}`)) return;
-        const name = peersMap[pid]?.name || 'Participante';
+        const name = peersMap[pid]?.name || '—';
         const icon = kind === 'cam' ? '📷' : '🖥️';
-        const text = kind === 'cam' ? 'ligou a câmera' : 'compartilhando tela';
 
         const bar = document.createElement('div');
         bar.className = 'offer-bar';
         bar.id = `offer-${key}`;
         bar.innerHTML = `
-          <div>
-            <div style="font-size:0.84rem; font-weight:700;">${icon} ${esc(name)} está ${text}</div>
-            <div class="muted">Abre apenas para você ao clicar.</div>
-          </div>
+          <div style="font-size:0.9rem; font-weight:700;">${icon} ${esc(name)}</div>
           <div class="row">
-            <button class="btn-ok btn-sm" onclick="openRemoteMedia('${esc(pid)}', '${kind}')">▶ Assistir</button>
-            <button class="btn-soft btn-sm" onclick="closeViewerMedia('${esc(pid)}', '${kind}')">Ocultar</button>
+            <button class="btn-ok btn-sm" onclick="openRemoteMedia('${esc(pid)}', '${kind}')" title="Assistir">▶</button>
+            <button class="btn-soft btn-sm" onclick="closeViewerMedia('${esc(pid)}', '${kind}')" title="Ocultar">✕</button>
           </div>
         `;
         $('stage').appendChild(bar);
@@ -1540,7 +1702,7 @@
       updateStage();
     }
 
-    function addLocalPreview(key, st, title, stopFn) {
+    function addLocalPreview(key, st, icon, stopFn) {
       if (document.getElementById(`view-${key}`)) return;
       const wrap = document.createElement('div');
       wrap.className = 'video-wrap';
@@ -1556,10 +1718,10 @@
       const top = document.createElement('div');
       top.className = 'video-top';
       top.innerHTML = `
-        <span class="video-tag">${esc(title)}</span>
+        <span class="video-tag">${icon}</span>
         <div class="row">
-          <button class="btn-soft btn-sm" onclick="triggerPip('view-${key}')">⧉ PiP</button>
-          <button class="btn-danger btn-sm" onclick="${stopFn}()">■ Parar</button>
+          <button class="btn-soft btn-sm" onclick="triggerPip('view-${key}')" title="PiP">⧉</button>
+          <button class="btn-danger btn-sm" onclick="${stopFn}()" title="Parar">■</button>
         </div>
       `;
 
@@ -1581,8 +1743,8 @@
         ensureAudioCtx();
         rawDisplay = await navigator.mediaDevices.getDisplayMedia({ video: { frameRate: 30 }, audio: true });
         screenOutStream = isolateScreenAudio(rawDisplay);
-        addLocalPreview('self-screen', screenOutStream, '🖥️ Sua tela', 'stopLocalScreen');
-        $('toggleScreenBtn').textContent = '🛑 Parar Tela';
+        addLocalPreview('self-screen', screenOutStream, '🖥️', 'stopLocalScreen');
+        $('toggleScreenBtn').textContent = '⏹️';
         $('toggleScreenBtn').classList.add('btn-danger');
         Object.entries(connsMap).forEach(([pid, c]) => {
           if (c.open) c.send({ type: 'screen-active' });
@@ -1600,7 +1762,7 @@
       rawDisplay = null;
       screenOutStream = null;
       document.getElementById('view-self-screen')?.remove();
-      $('toggleScreenBtn').textContent = '🖥️ Compartilhar Tela';
+      $('toggleScreenBtn').textContent = '🖥️';
       $('toggleScreenBtn').classList.remove('btn-danger');
       Object.values(screenCalls).forEach((c) => { try { c.close(); } catch (_) {} });
       Object.values(connsMap).forEach((c) => { if (c.open) c.send({ type: 'screen-stopped' }); });
@@ -1618,17 +1780,15 @@
           },
           audio: false
         });
-        addLocalPreview('self-cam', localCamStream, '📷 Sua câmera', 'stopLocalCam');
-        $('toggleCamBtn').textContent = '🛑 Parar Câmera';
+        addLocalPreview('self-cam', localCamStream, '📷', 'stopLocalCam');
+        $('toggleCamBtn').textContent = '⏹️';
         $('toggleCamBtn').classList.add('btn-danger');
         Object.entries(connsMap).forEach(([pid, c]) => {
           if (c.open) c.send({ type: 'cam-active' });
           callCamToPeer(pid);
         });
         localCamStream.getVideoTracks()[0].onended = stopLocalCam;
-      } catch (_) {
-        alert('Não foi possível acessar a câmera.');
-      }
+      } catch (_) {}
     };
 
     function stopLocalCam() {
@@ -1636,25 +1796,12 @@
       localCamStream.getTracks().forEach((t) => t.stop());
       localCamStream = null;
       document.getElementById('view-self-cam')?.remove();
-      $('toggleCamBtn').textContent = '📷 Câmera';
+      $('toggleCamBtn').textContent = '📷';
       $('toggleCamBtn').classList.remove('btn-danger');
       Object.values(camCalls).forEach((c) => { try { c.close(); } catch (_) {} });
       Object.values(connsMap).forEach((c) => { if (c.open) c.send({ type: 'cam-stopped' }); });
       updateStage();
     }
-
-    function saveRoomEntry(title, id) {
-      const cleanId = (id || '').trim();
-      if (!cleanId) return alert('Informe um ID de sala.');
-      const cleanTitle = (title || '').trim() || `Sala ${cleanId.slice(0, 6)}`;
-      const idx = savedRooms.findIndex((r) => r.id === cleanId);
-      if (idx >= 0) savedRooms[idx].title = cleanTitle;
-      else savedRooms.unshift({ title: cleanTitle, id: cleanId });
-      persistRooms();
-    }
-
-    $('saveManualRoomBtn').onclick = () => saveRoomEntry($('roomNameInput').value || roomTitle, roomId || $('connectIdInput').value);
-    $('saveActiveRoomBtn').onclick = () => saveRoomEntry(roomTitle, roomId);
 
     function getInviteUrl() {
       if (!roomId) return '';
@@ -1666,48 +1813,13 @@
 
     $('copyInviteLinkBtn').onclick = () => {
       const link = getInviteUrl();
-      if (link) navigator.clipboard.writeText(link);
+      if (link && navigator.clipboard) navigator.clipboard.writeText(link).catch(() => {});
     };
-
-    function renderRooms() {
-      const box = $('savedRoomsList');
-      box.innerHTML = '';
-      if (!savedRooms.length) {
-        box.innerHTML = '<div class="muted">Nenhuma sala salva.</div>';
-        return;
-      }
-      savedRooms.forEach((r) => {
-        const cur = inRoom && roomId === r.id;
-        const msgs = (historyMap[r.id] || []).length;
-        const el = document.createElement('div');
-        el.className = `list-item ${cur ? 'active' : ''}`;
-        el.innerHTML = `
-          <div class="item-main">
-            <div class="item-title">
-              <span>${esc(r.title)}</span>
-              ${cur ? '<span class="chip-on">ATIVA</span>' : ''}
-              ${msgs ? `<span class="chip-msg">${msgs}</span>` : ''}
-            </div>
-            <div class="item-sub">${esc(r.id)}</div>
-          </div>
-          <div class="row">
-            ${!cur ? `<button class="btn-sm" onclick="joinTarget('${esc(r.id)}', '${esc(r.title)}')">Pedir</button>` : ''}
-            <button class="btn-soft btn-sm" onclick="delRoom('${esc(r.id)}')">✕</button>
-          </div>
-        `;
-        box.appendChild(el);
-      });
-    }
-
-    function delRoom(id) {
-      savedRooms = savedRooms.filter((r) => r.id !== id);
-      persistRooms();
-    }
 
     function addContactAuto(id, name) {
       if (!id || id === peer?.id) return;
       if (!savedContacts.some((c) => c.id === id)) {
-        savedContacts.unshift({ name: name || `Contato ${id.slice(0, 6)}`, id });
+        savedContacts.unshift({ name: name || id.slice(0, 6), id });
         persistContacts();
       }
     }
@@ -1715,7 +1827,7 @@
     $('addContactBtn').onclick = () => {
       const id = $('contactIdInput').value.trim();
       if (!id) return;
-      const name = $('contactNameInput').value.trim() || `Contato ${id.slice(0, 6)}`;
+      const name = $('contactNameInput').value.trim() || id.slice(0, 6);
       const idx = savedContacts.findIndex((c) => c.id === id);
       if (idx >= 0) savedContacts[idx].name = name;
       else savedContacts.unshift({ name, id });
@@ -1731,8 +1843,8 @@
       let onCount = 0;
 
       if (!savedContacts.length) {
-        box.innerHTML = '<div class="muted">Sem contatos ainda.</div>';
-        $('onlineContactsCount').textContent = '0 ativos';
+        box.innerHTML = '<div class="muted">—</div>';
+        $('onlineContactsCount').textContent = '0';
         return;
       }
 
@@ -1745,18 +1857,18 @@
           <div class="item-main">
             <div class="item-title">
               <span>${esc(c.name)}</span>
-              ${on ? '<span class="chip-on">NA SALA</span>' : ''}
+              ${on ? '<span class="chip-on">●</span>' : ''}
             </div>
             <div class="item-sub">${esc(c.id)}</div>
           </div>
           <div class="row">
-            <button class="btn-soft btn-sm" onclick="callContact('${esc(c.id)}')">${on ? 'Ativo' : 'Pedir'}</button>
-            <button class="btn-soft btn-sm" onclick="delContact('${esc(c.id)}')">✕</button>
+            ${(!on && !inRoom && !pendingApproval) ? `<button class="btn-soft btn-sm" onclick="callContact('${esc(c.id)}')" title="Conectar">🚪</button>` : ''}
+            <button class="btn-soft btn-sm" onclick="delContact('${esc(c.id)}')" title="Excluir">✕</button>
           </div>
         `;
         box.appendChild(el);
       });
-      $('onlineContactsCount').textContent = `${onCount} ativo${onCount === 1 ? '' : 's'}`;
+      $('onlineContactsCount').textContent = String(onCount);
     }
 
     function delContact(id) {
@@ -1765,7 +1877,6 @@
     }
 
     async function callContact(id) {
-      $('connectIdInput').value = id;
       if (!inRoom && !pendingApproval) await joinTarget(id);
     }
 
@@ -1776,14 +1887,13 @@
       if (!historyMap[k]) historyMap[k] = [];
       historyMap[k].push(item);
       persistHistory();
-      renderRooms();
       appendMsg(item);
       $('messagesList').scrollTop = $('messagesList').scrollHeight;
     }
 
     function addSystemMsg(txt) {
       const d = document.createElement('div');
-      d.style.cssText = 'text-align:center; font-size:0.72rem; color:var(--text-soft); padding:2px 0;';
+      d.style.cssText = 'text-align:center; font-size:0.78rem; color:var(--text-soft); padding:2px 0;';
       d.textContent = txt;
       $('messagesList').appendChild(d);
     }
@@ -1804,7 +1914,7 @@
               <div class="file-name">📎 ${esc(item.fileName)}</div>
               <div class="item-sub">${fmtBytes(item.fileSize || 0)}</div>
             </div>
-            ${item.fileUrl ? `<a download="${esc(item.fileName)}" href="${item.fileUrl}" style="text-decoration:none;"><button class="btn-ok btn-sm">Baixar</button></a>` : ''}
+            ${item.fileUrl ? `<a download="${esc(item.fileName)}" href="${item.fileUrl}" style="text-decoration:none;"><button class="btn-ok btn-sm" title="Baixar">⬇</button></a>` : ''}
           </div>
           ${img && item.fileUrl ? `<img class="file-img" src="${item.fileUrl}" alt="" />` : ''}
         `;
@@ -1816,9 +1926,8 @@
 
     function renderHistory() {
       $('messagesList').innerHTML = '';
-      $('historyLabel').textContent = inRoom ? roomTitle : 'Histórico local';
       const list = historyMap[histKey()] || [];
-      if (!list.length) return addSystemMsg('Sem mensagens.');
+      if (!list.length) return;
       list.forEach(appendMsg);
       $('messagesList').scrollTop = $('messagesList').scrollHeight;
     }
@@ -1836,7 +1945,7 @@
       const txt = $('msgInput').value.trim();
       if (!txt) return;
       const time = nowTime();
-      addMsg({ kind: 'text', sender: `${prefs.name} (Você)`, color: prefs.color, photo: prefs.photo, text: txt, time });
+      addMsg({ kind: 'text', sender: prefs.name, color: prefs.color, photo: prefs.photo, text: txt, time });
       Object.values(connsMap).forEach((c) => {
         if (c.open) {
           c.send({ type: 'typing', active: false });
@@ -1864,24 +1973,22 @@
         const part = buf.slice(pos, pos + CHUNK);
         openPeers.forEach((c) => c.send({ type: 'f-chunk', id, data: part }));
         pos += part.byteLength;
-        $('transferStatus').textContent = `Enviando ${file.name} (${Math.min(100, Math.round((pos / total) * 100))}%)`;
+        $('transferStatus').textContent = `📤 ${Math.min(100, Math.round((pos / total) * 100))}%`;
         if (pos % (CHUNK * 8) === 0) await new Promise((r) => setTimeout(r, 0));
       }
       openPeers.forEach((c) => c.send({ type: 'f-end', id }));
 
       const url = await readDataUrl(new Blob([buf], { type: file.type || 'application/octet-stream' }));
       addMsg({
-        kind: 'file', sender: `${prefs.name} (Você)`, color: prefs.color, photo: prefs.photo,
+        kind: 'file', sender: prefs.name, color: prefs.color, photo: prefs.photo,
         fileName: file.name, fileSize: total, fileMime: file.type, fileUrl: url, time: nowTime()
       });
-      $('transferStatus').textContent = `Enviado: ${file.name}`;
+      $('transferStatus').textContent = `📤 ${file.name} ✓`;
     }
 
     $('clearHistoryBtn').onclick = () => {
-      if (!confirm('Limpar histórico?')) return;
       delete historyMap[histKey()];
       persistHistory();
-      renderRooms();
       renderHistory();
     };
 
@@ -1897,8 +2004,8 @@
           <div class="member-top">
             ${avatarHtml('self', prefs, selfTalking)}
             <div class="item-main">
-              <div class="item-title">${esc(prefs.name)} (Você) ${isHost ? '<span class="chip-on">CRIADOR</span>' : ''}</div>
-              <div class="item-sub">${micMuted ? 'Mutado' : (prefs.mode === 'ptt' ? 'Push-to-Talk' : 'Filtro ativo')}</div>
+              <div class="item-title">${esc(prefs.name)} ${inRoom ? (isHost ? '<span class="chip-on">👑</span>' : '<span class="chip-msg">🚪</span>') : ''}</div>
+              <div class="item-sub">${micMuted ? '🔇' : (prefs.mode === 'ptt' ? '⌨️' : '🎤')}</div>
             </div>
           </div>
         </div>
@@ -1913,11 +2020,11 @@
             ${avatarHtml(pid, p, ra.speaking)}
             <div class="item-main">
               <div class="item-title">${esc(p.name)}</div>
-              <div class="item-sub">Aprovado</div>
+              <div class="item-sub">●</div>
             </div>
           </div>
           <div class="vol-row">
-            <button class="btn-soft btn-sm" onclick="toggleMutePeer('${pid}')">${ra.muted ? '🔇' : '🔊'}</button>
+            <button class="btn-soft btn-sm" onclick="toggleMutePeer('${pid}')" title="Som">${ra.muted ? '🔇' : '🔊'}</button>
             <input type="range" min="0" max="200" value="${ra.vol}" oninput="setVol('${pid}', this.value)" />
             <span class="vol-val" id="vol-${pid}">${ra.vol}%</span>
           </div>
@@ -1926,33 +2033,63 @@
       }
     }
 
-    $('createRoomBtn').onclick = async () => {
-      try { await initMic(); isHost = true; initPeer(); }
-      catch (_) { alert('Permita o microfone para criar a sala.'); }
+    $('openCreateModalBtn').onclick = () => {
+      if (inRoom || pendingApproval) return;
+      $('roomNameInput').value = '';
+      $('autoCopyLinkChk').checked = prefs.autoCopyLink;
+      $('createRoomModal').classList.add('open');
+      setTimeout(() => $('roomNameInput').focus(), 50);
+    };
+
+    function closeCreateModal() {
+      $('createRoomModal').classList.remove('open');
+    }
+
+    $('confirmCreateRoomBtn').onclick = async () => {
+      prefs.autoCopyLink = $('autoCopyLinkChk').checked;
+      localStorage.setItem(STORE.prefs, JSON.stringify(prefs));
+      closeCreateModal();
+      try {
+        await initMic();
+        isHost = true;
+        initPeer();
+      } catch (_) {}
+    };
+
+    $('toggleJoinBoxBtn').onclick = () => {
+      joinBoxOpen = !joinBoxOpen;
+      $('joinInlineBox').style.display = joinBoxOpen ? 'flex' : 'none';
+      if (joinBoxOpen) setTimeout(() => $('connectIdInput').focus(), 40);
     };
 
     async function joinTarget(id, title = '') {
+      if (inRoom || pendingApproval) return;
       const target = (id || $('connectIdInput').value).trim();
-      if (!target) return alert('Informe o ID da sala.');
-      if (title) $('roomNameInput').value = title;
-      try { await initMic(); isHost = false; initPeer(target); }
-      catch (_) { alert('Permita o microfone para solicitar entrada.'); }
+      if (!target) return;
+      roomTitle = title || target.slice(0, 6);
+      try {
+        await initMic();
+        isHost = false;
+        initPeer(target);
+      } catch (_) {}
     }
 
     $('joinRoomBtn').onclick = () => joinTarget();
-    $('copyRoomIdBtn').onclick = () => { if (roomId) navigator.clipboard.writeText(roomId); };
+    $('connectIdInput').onkeypress = (e) => { if (e.key === 'Enter') joinTarget(); };
+    $('cancelJoinBtn').onclick = cancelOutgoingJoin;
+    $('copyRoomIdBtn').onclick = () => { if (roomId && navigator.clipboard) navigator.clipboard.writeText(roomId).catch(() => {}); };
     $('leaveRoomBtn').onclick = () => location.reload();
 
     $('toggleMicBtn').onclick = () => {
       micMuted = !micMuted;
-      $('toggleMicBtn').textContent = micMuted ? '🔇 Mic Mutado' : '🎤 Mic Ligado';
+      $('toggleMicBtn').textContent = micMuted ? '🔇' : '🎤';
       $('toggleMicBtn').classList.toggle('btn-danger', micMuted);
       renderMembers();
     };
 
     $('toggleDeafenBtn').onclick = () => {
       deafened = !deafened;
-      $('toggleDeafenBtn').textContent = deafened ? '🔇 Som Mudo' : '🎧 Som Ligado';
+      $('toggleDeafenBtn').textContent = deafened ? '🔇' : '🎧';
       $('toggleDeafenBtn').classList.toggle('btn-danger', deafened);
       Object.keys(remoteAudios).forEach(syncGain);
     };
@@ -1965,7 +2102,7 @@
       if (bindingKey) {
         e.preventDefault();
         prefs.pttCode = e.code;
-        prefs.pttLabel = e.key === ' ' ? 'Espaço' : e.key.toUpperCase();
+        prefs.pttLabel = e.key === ' ' ? 'Space' : e.key.toUpperCase();
         bindingKey = false;
         $('bindPttBtn').classList.remove('btn-ok');
         savePrefs();
@@ -2013,7 +2150,7 @@
     };
     function removeAvatar() { prefs.photo = null; savePrefs(); }
 
-    $('nameInput').oninput = (e) => { prefs.name = e.target.value.trim() || 'Usuário'; savePrefs(); };
+    $('nameInput').oninput = (e) => { prefs.name = e.target.value.trim() || 'User'; savePrefs(); };
     $('colorInput').oninput = (e) => { prefs.color = e.target.value; savePrefs(); };
     $('micSelect').onchange = async (e) => { prefs.micId = e.target.value; savePrefs(); if (micStream) await initMic(); };
     $('camSelect').onchange = async (e) => {
@@ -2028,7 +2165,7 @@
     $('thRange').oninput = (e) => { prefs.threshold = Number(e.target.value); savePrefs(); };
     $('holdRange').oninput = (e) => { prefs.holdMs = Number(e.target.value); savePrefs(); };
     $('nativeAudioChk').onchange = async (e) => { prefs.nativeAudio = e.target.checked; savePrefs(); if (micStream) await initMic(); };
-    $('bindPttBtn').onclick = () => { bindingKey = true; $('pttKeyLabel').textContent = 'Pressione...'; $('bindPttBtn').classList.add('btn-ok'); };
+    $('bindPttBtn').onclick = () => { bindingKey = true; $('pttKeyLabel').textContent = '⌨️?'; $('bindPttBtn').classList.add('btn-ok'); };
 
     function syncUI() {
       $('nameInput').value = prefs.name;
@@ -2046,7 +2183,6 @@
       const isPtt = prefs.mode === 'ptt';
       $('vadBox').style.display = isPtt ? 'none' : 'flex';
       $('pttBox').style.display = isPtt ? 'block' : 'none';
-      $('voiceHint').textContent = isPtt ? `PTT (${prefs.pttLabel})` : 'Detecção automática';
 
       if ($('previewAvatar')) {
         $('previewAvatar').style.background = prefs.color;
@@ -2055,24 +2191,27 @@
 
       const pill = $('roomStatusPill');
       pill.classList.remove('active', 'pending');
+
+      $('lobbyView').style.display = (!inRoom && !pendingApproval) ? 'flex' : 'none';
+      $('outgoingRequestView').style.display = pendingApproval ? 'flex' : 'none';
+      $('roomSessionBar').style.display = inRoom ? 'flex' : 'none';
+
       if (inRoom) {
         pill.classList.add('active');
         $('roomStatusText').textContent = `${roomTitle} (${Object.keys(peersMap).length + 1})`;
-        $('roomSessionBar').style.display = 'flex';
+        $('sessionRoleBadge').textContent = isHost ? '👑' : '🚪';
         $('activeRoomTitle').textContent = roomTitle;
         $('activeRoomIdLabel').textContent = roomId;
+        $('activeInviteLinkLabel').textContent = getInviteUrl();
       } else if (pendingApproval) {
         pill.classList.add('pending');
-        $('roomStatusText').textContent = 'Aguardando aprovação...';
-        $('roomSessionBar').style.display = 'none';
+        $('roomStatusText').textContent = '⏳';
+        $('outgoingRoomName').textContent = roomTitle || '';
+        $('outgoingRoomCode').textContent = roomId || '';
       } else {
-        $('roomStatusText').textContent = 'Fora de sala';
-        $('roomSessionBar').style.display = 'none';
+        $('roomStatusText').textContent = '⏸️';
       }
 
-      const lockJoin = inRoom || pendingApproval;
-      $('createRoomBtn').disabled = lockJoin;
-      $('joinRoomBtn').disabled = lockJoin;
       $('toggleMicBtn').disabled = !inRoom;
       $('toggleDeafenBtn').disabled = !inRoom;
       $('toggleScreenBtn').disabled = !inRoom;
@@ -2085,14 +2224,19 @@
 
       renderPendingRequests();
       renderMembers();
+      renderContacts();
     }
 
     (function applyUrlInvite() {
       const params = new URLSearchParams(window.location.search);
       const sala = params.get('sala');
       const nome = params.get('nome');
-      if (nome) $('roomNameInput').value = nome;
-      if (sala) $('connectIdInput').value = sala;
+      if (nome) roomTitle = nome;
+      if (sala) {
+        joinBoxOpen = true;
+        $('joinInlineBox').style.display = 'flex';
+        $('connectIdInput').value = sala;
+      }
     })();
 
     function readDataUrl(blob) {
@@ -2108,8 +2252,6 @@
 
     setTheme(prefs.theme);
     syncUI();
-    renderRooms();
-    renderContacts();
     renderHistory();
     startLoop();
   </script>
