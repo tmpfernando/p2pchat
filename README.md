@@ -1,46 +1,39 @@
-# 🗣️ P2P Chat
+# p2pchat
 
-Uma aplicação web direta via navegador (**Peer-to-Peer / WebRTC**) para chamadas de voz, compartilhamento de tela, câmera, chat e envio de arquivos — feita para funcionar sem depender de plataformas pesadas ou bloqueadas.
-
-> ✨ **Vibe Coded com Gemini:** Este projeto foi construído de forma iterativa e *vibe coded* por meio do **Gemini**, nascendo da necessidade prática de ter um recurso rápido e funcional para **compartilhar tela, conversar por voz e trocar arquivos** quando outros sistemas não estão disponíveis ou não são práticos no momento.
+🔗 **Testar agora / Live Demo:** [https://tmpfernando.github.io/p2pchat/](https://tmpfernando.github.io/p2pchat/)
 
 ---
 
-## 🚀 Por que o P2P Link existe?
+## 🇧🇷 Português
 
-Às vezes você só precisa abrir a tela para alguém, falar rápido no microfone ou mandar um arquivo direto — sem instalar cliente, sem criar conta e sem esbarrar em restrições de outros programas. O **P2P Link** resolve isso direto no browser usando **PeerJS / WebRTC**, com **aprovação de entrada pelo criador da sala** e **visualização sob demanda** (telas e câmeras só abrem quando você clica em **Assistir**).
+Aplicação web *peer-to-peer* (P2P) de chat, voz, vídeo e compartilhamento de tela/arquivos construída em arquivo único HTML com **PeerJS** e **Web Audio API**.
 
----
-
-## ✨ Destaques
-
-* 🖥️ **Compartilhamento de Tela & Câmera sob demanda:** Transmissão via `getDisplayMedia` / `getUserMedia`, com botão **Assistir** para não abrir janelas de vídeo à força e suporte a **Picture-in-Picture (PiP)**.
-* 🎙️ **Áudio com Filtro Vocal & Detecção:** Suporte a detecção automática de voz (com *threshold* e *hold* ajustáveis) ou **Push-to-Talk**, filtros *high-pass* / *low-pass* e controle de volume individual por participante.
-* 🔒 **Controle da Sala:** O criador aprova ou recusa pedidos de entrada e pode gerar link direto (`?sala=...`).
-* 💬 **Chat & Transferência P2P:** Mensagens de texto, indicador de digitação e envio de arquivos em blocos diretamente entre os pares, com histórico salvo localmente no navegador.
-* 🌈 **Temas Escuro, Claro e RGB Super Enfeitado:** Alternância instantânea entre modo escuro, claro e o modo **RGB** com fundo aurora animado, bordas prismáticas pulsantes e botões com gradiente colorido.
+### ✨ Principais recursos
+* **Salas temporárias P2P:** Crie uma sala com nome personalizado, gere código e link de convite (`?sala=...&nome=...`) e aprove ou recuse pedidos de entrada (`🔒 🚪`). Como a conexão é P2P, quando o criador encerra a sessão a sala deixa de existir.
+* **Áudio e vídeo:** Suporte a microfone com modos **VAD** (detecção automática de voz com medidor VU, limiar e tempo de retenção) e **PTT** (*Push-to-Talk* com tecla configurável), equalização/filtros (`HPF`/`LPF`), controle de volume individual por participante, mute/deafen, câmera e compartilhamento de tela com suporte a *Picture-in-Picture* (`⧉`).
+* **Chat e arquivos:** Mensagens em tempo real com indicador de digitação (`✍️`), histórico local por sessão e envio de arquivos em blocos com pré-visualização para imagens.
+* **Contatos e perfil:** Salve contatos recorrentes (`📇`) para conectar rapidamente, personalize nome, cor e foto de perfil e alterne entre temas **Escuro (`🌙`)**, **Claro (`☀️`)** e **RGB (`🌈`)** com bordas em efeito LED e emojis animados.
 
 ---
 
-## 📦 Como publicar no GitHub Pages
+## 🇺🇸 English
 
-1. Crie um repositório no GitHub e salve o código da aplicação como **`index.html`** na raiz.
-2. Acesse **Settings → Pages** no repositório.
-3. Em **Build and deployment**, selecione a branch (`main`) e a pasta `/ (root)`, depois clique em **Save**.
-4. Abra `https://<seu-usuario>.github.io/<seu-repositorio>/` em um navegador moderno (Chrome, Edge, Firefox ou Brave).
+Peer-to-peer (P2P) web app for chat, voice, video, and screen/file sharing built as a single HTML file using **PeerJS** and the **Web Audio API**.
 
----
-
-## 🛠️ Tecnologias
-
-* **HTML5, CSS3 e JavaScript puro** (arquivo único)
-* **PeerJS** (`1.5.4`) sobre **WebRTC**
-* **Web Audio API** (filtros, medidor de nível, ducking de áudio de tela e detecção de fala)
-* **GitHub Pages** para hospedagem estática gratuita
+### ✨ Key Features
+* **Ephemeral P2P Rooms:** Create a room with a custom name, generate a room code and invite link (`?sala=...&nome=...`), and approve or reject join requests (`🔒 🚪`). Because rooms are P2P, they are no longer accessible once the host leaves.
+* **Voice & Video:** Microphone support with **VAD** (voice activity detection with VU meter, threshold, and hold time) and **PTT** (*Push-to-Talk* with custom keybind), `HPF`/`LPF` audio filtering, per-user volume sliders, mute/deafen, camera streaming, and screen sharing with *Picture-in-Picture* (`⧉`).
+* **Chat & File Transfer:** Real-time messaging with typing indicator (`✍️`), session-based local history, and chunked file transfers with inline image previews.
+* **Contacts & Themes:** Save frequent contacts (`📇`) for quick connection, customize display name, color, and avatar, and switch between **Dark (`🌙`)**, **Light (`☀️`)**, and **RGB (`🌈`)** themes featuring LED-style glowing borders and animated emojis.
 
 ---
 
-## ⚠️ Observações de uso
+## 🇪🇸 Español
 
-* Como utiliza **WebRTC** e captura de mídia (`getUserMedia` / `getDisplayMedia`), o acesso exige contexto seguro (**HTTPS**, como no GitHub Pages, ou `localhost`).
-* Em algumas redes corporativas ou firewalls mais rígidos, conexões P2P podem sofrer restrições de NAT/rede.
+Aplicación web *peer-to-peer* (P2P) de chat, voz, vídeo y compartición de pantalla/archivos en un solo archivo HTML con **PeerJS** y **Web Audio API**.
+
+### ✨ Funciones principales
+* **Salas P2P temporales:** Crea una sala con nombre personalizado, genera código y enlace de invitación (`?sala=...&nome=...`) y aprueba o rechaza solicitudes de ingreso (`🔒 🚪`). Al ser P2P, la sala deja de estar disponible cuando el creador sale.
+* **Audio y vídeo:** Micrófono con modos **VAD** (detección de voz con medidor VU, umbral y retención) y **PTT** (*Push-to-Talk* con tecla configurable), filtros `HPF`/`LPF`, control de volumen individual, silencio/ensordecer, cámara y compartición de pantalla con *Picture-in-Picture* (`⧉`).
+* **Chat y archivos:** Mensajes en tiempo real con indicador de escritura (`✍️`), historial local por sesión y envío de archivos por fragmentos con vista previa de imágenes.
+* **Contactos y temas:** Guarda contactos (`📇`) para conectarte rápido, personaliza nombre, color y foto de perfil y cambia entre los temas **Oscuro (`🌙`)**, **Claro (`☀️`)** y **RGB (`🌈`)** con bordes tipo LED y emojis animados.
